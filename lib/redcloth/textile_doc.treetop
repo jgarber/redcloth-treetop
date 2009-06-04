@@ -4,11 +4,11 @@ grammar TextileDoc
   end
 
   rule paragraph
-    ("p." spaces)? block_text
+    ("p." spaces)? content:block_text
   end
   
   rule list
-    li ("\n" li)*
+    li ("\n" li)* <List>
   end
   
   rule spaces
@@ -16,15 +16,15 @@ grammar TextileDoc
   end
   
   rule list_start
-    "# "
-  end
-  
-  rule list_text
-    (!(li_end) .)+
+    "#"+ " "
   end
   
   rule li
-    list_start list_text
+    list_start content:list_text <ListItem>
+  end
+
+  rule list_text
+    (!(li_end) .)+ &li_end
   end
   
   rule li_end
