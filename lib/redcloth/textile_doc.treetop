@@ -1,0 +1,45 @@
+grammar TextileDoc
+  rule block
+    (list / paragraph) block_end
+  end
+
+  rule paragraph
+    ("p." spaces)? block_text
+  end
+  
+  rule list
+    li ("\n" li)*
+  end
+  
+  rule spaces
+    " "+
+  end
+  
+  rule list_start
+    "# "
+  end
+  
+  rule list_text
+    (!(li_end) .)+
+  end
+  
+  rule li
+    list_start list_text
+  end
+  
+  rule li_end
+    "\n" list_start / block_end
+  end
+  
+  rule block_text
+    (!double_newline .)+
+  end
+  
+  rule block_end
+    double_newline / !(.)
+  end
+  
+  rule double_newline
+    "\n\n"
+  end
+end
