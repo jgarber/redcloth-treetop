@@ -11,29 +11,35 @@ describe TextileDocParser do
   
   it 'should parse an implicit paragraph' do
     parse("This is my paragraph\n\n").should have_a_paragraph
+    parse("This is my paragraph\n\n").to_html.should == "<p>This is my paragraph</p>"
   end
   
   it 'should parse an explicit paragraph' do
     parse("p. This is my paragraph\n\n").should have_a_paragraph
+    parse("p. This is my paragraph\n\n").to_html.should == "<p>This is my paragraph</p>"
   end
   
   it 'should parse an explicit paragraph without double newline after' do
     parse("p. This is my paragraph").should have_a_paragraph
+    parse("p. This is my paragraph").to_html.should == "<p>This is my paragraph</p>"
   end
   
   it "should parse a basic list" do
     parse("# one\n# two\n\n").should have_a_list
+    parse("# one\n# two\n\n").to_html.should == "<ol><li>one</li><li>two</li></ol>"
   end
 
   it "should parse a basic list without double newline after" do
-    parse("# one\n# two\n\n").should have_a_list
+    parse("# one\n# two").should have_a_list
+    parse("# one\n# two").to_html.should == "<ol><li>one</li><li>two</li></ol>"
   end
   
   it "should parse a nested list" do
     puts parse("# one\n## one.two\n\n").inspect
-    parse("# one\n## one.two\n\n").should have_a_list("one.two") do |list|
-      list.should have_an_li
-    end
+    # parse("# one\n## one.two\n\n").should have_a_list("one.two") do |list|
+    #   list.should have_an_li
+    # end
+    parse("# one\n## one.two\n\n").to_html.should == "<ol><li>one</li><ol><li>one.two</li></ol></ol>"
   end
   
   # TODO: abstract these later
