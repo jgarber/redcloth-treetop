@@ -1,0 +1,86 @@
+module RedCloth
+  module Parser
+
+    grammar TextileDoc
+      rule document
+        block+ {
+          def build(filter)
+            Ast::TextileDoc.new(
+              elements.map {|e| e.build(filter) }
+            )
+          end
+        }
+      end
+
+      rule block
+        block_element:(list / paragraph) block_end {
+          def build(filter)
+            block_element.build(filter)
+          end
+        }
+      end
+
+      rule paragraph
+        ("p." spaces)? block_text {
+          def build(filter)
+            Ast::Paragraph.new(block_text.text_value)
+          end
+        }
+      end
+  
+      rule list
+        li more_lis:("\n" li)* {
+          def build(filter)
+            Ast::List.new(
+              {},
+              list_items.map {|li| li.build(filter) }
+            )
+          end
+          def list_items
+            [li] + more_lis.elements.map {|e| e.li } 
+          end
+        }
+      end
+  
+      rule spaces
+        [\s]+
+      end
+  
+      rule list_start
+        nest:"#"+ [\s]
+      end
+  
+      rule li
+        list_start content:list_text {
+          def build(filter)
+            Ast::ListItem.new(
+              {},
+              content.text_value
+            )
+          end
+        }
+      end
+
+      rule list_text
+        (!(li_end) .)+ &li_end
+      end
+  
+      rule li_end
+        "\n" list_start / block_end
+      end
+  
+      rule block_text
+        (!double_newline .)+
+      end
+  
+      rule block_end
+        double_newline / !(.)
+      end
+  
+      rule double_newline
+        "\n\n"
+      end
+    end
+
+  end
+end
