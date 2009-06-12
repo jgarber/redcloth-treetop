@@ -47,6 +47,11 @@ module RedCloth
                 @list_layout[@current_list_index] << list
                 @list_layout << list
                 @current_list_index += 1
+                @list_nest = li.nest
+              elsif li.nest == @list_nest[0..-2]
+                @list_layout.pop
+                @current_list_index -= 1
+                @list_nest = li.nest
               end
               @list_layout[@current_list_index] << li.build(filter)
             end
