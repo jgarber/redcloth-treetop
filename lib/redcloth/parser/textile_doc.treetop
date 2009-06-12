@@ -31,9 +31,16 @@ module RedCloth
       rule list
         li more_lis:("\n" li)* {
           def build(filter)
+            @list_layout = li.nest
             Ast::List.new(
               {},
-              list_items.map {|li| li.build(filter) }
+              list_items.map do |li|
+                if li.nest == @list_layout
+                  li.build(filter)
+                else
+                  Ast::List.new({}, [li.build(filter)])
+                end
+              end
             )
           end
           def list_items
@@ -52,6 +59,10 @@ module RedCloth
   
       rule li
         list_start content:list_text {
+          def nest
+            list_start.nest.text_value
+          end
+          
           def build(filter)
             Ast::ListItem.new(
               {},

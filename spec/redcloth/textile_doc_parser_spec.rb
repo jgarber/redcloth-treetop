@@ -43,13 +43,13 @@ module RedCloth
           ]]
       end
         
-      # it "should parse a nested list" do
-      #   puts parse("# one\n## one.two\n\n").inspect
-      #   # parse("# one\n## one.two\n\n").should have_a_list("one.two") do |list|
-      #   #   list.should have_an_li
-      #   # end
-      #   parse("# one\n## one.two\n\n").to_html.should == "<ol><li>one</li><ol><li>one.two</li></ol></ol>"
-      # end
+      it "should parse a nested list" do
+        parse("# one\n## one.two\n\n").to_sexp.should == 
+        [[:list, {}, [
+          [:list_item, {}, "one"],
+          [:list, {}, [
+            [:list_item, {}, "one.two"]]]]]]
+      end
     end
 
   end
