@@ -89,9 +89,13 @@ module RedCloth
         if parse_tree.nil?
           raise RedCloth::Parser::SyntaxError.new(self, file, line_offset)
         else
-          ast = parse_tree.build(filter) # may return nil if it doesn't match filter.
-          # ast.file = file unless ast.nil?
-          ast
+          if parse_tree.respond_to?(:build)
+            ast = parse_tree.build(filter) # may return nil if it doesn't match filter.
+            # ast.file = file unless ast.nil?
+            ast
+          else
+            parse_tree
+          end
         end
       end
     end

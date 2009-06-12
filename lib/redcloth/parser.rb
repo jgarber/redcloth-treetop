@@ -1,5 +1,6 @@
 require 'redcloth/ast'
 require 'redcloth/parser/treetop_ext'
+require 'redcloth/parser/attributes'
 require 'redcloth/parser/common'
 require 'redcloth/parser/list'
 require 'redcloth/parser/textile_doc'

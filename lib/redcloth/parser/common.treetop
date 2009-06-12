@@ -1,6 +1,8 @@
 module RedCloth
   module Parser
     grammar Common
+      include Attributes
+      
       rule spaces
         [\s]+
       end

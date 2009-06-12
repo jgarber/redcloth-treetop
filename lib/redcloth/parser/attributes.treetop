@@ -1,0 +1,23 @@
+module RedCloth
+  module Parser
+    grammar Attributes
+    
+      rule css_class_id
+        "(" (css_id / css_classes / css_classes css_id) ")"
+      end
+    
+      rule css_classes
+        css_class ([\s] css_class)*
+      end
+    
+      rule css_class
+        [_a-z] [_a-z0-9-]+
+      end
+      
+      rule css_id
+        "#" [_a-z0-9-]+
+      end
+    
+    end
+  end
+end
