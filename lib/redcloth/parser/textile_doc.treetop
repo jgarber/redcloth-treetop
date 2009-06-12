@@ -37,23 +37,20 @@ module RedCloth
               []
             )
             @list_layout = [root_list]
-            @current_list_index = 0
             list_items.each do |li|
               if li.nest[0..-2] == @list_nest
                 list = Ast::List.new(
                   {},
                   []
                 )
-                @list_layout[@current_list_index] << list
+                @list_layout.last << list
                 @list_layout << list
-                @current_list_index += 1
                 @list_nest = li.nest
               elsif li.nest == @list_nest[0..-2]
                 @list_layout.pop
-                @current_list_index -= 1
                 @list_nest = li.nest
               end
-              @list_layout[@current_list_index] << li.build(filter)
+              @list_layout.last << li.build(filter)
             end
             root_list
           end
