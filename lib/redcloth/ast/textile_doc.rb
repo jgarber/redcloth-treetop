@@ -2,7 +2,6 @@ module RedCloth
   module Ast
     # Represents the root node of a parsed textile document.
     class TextileDoc
-      attr_accessor :file
       
       def initialize(block_elements)
         @block_elements = block_elements

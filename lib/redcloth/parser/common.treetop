@@ -1,0 +1,18 @@
+module RedCloth
+  module Parser
+    grammar Common
+      rule spaces
+        [\s]+
+      end
+
+      rule block_end
+        double_newline / !(.)
+      end
+  
+      rule double_newline
+        "\n\n"
+      end
+      
+    end
+  end
+end

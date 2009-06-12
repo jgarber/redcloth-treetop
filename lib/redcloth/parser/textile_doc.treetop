@@ -1,7 +1,8 @@
 module RedCloth
   module Parser
-
     grammar TextileDoc
+      include List
+      
       rule document
         block+ {
           def build(filter)
@@ -28,80 +29,10 @@ module RedCloth
         }
       end
   
-      rule list
-        li more_lis:("\n" li)* {
-          def build(filter)
-            @list_nest = li.nest
-            root_list = Ast::List.new(
-              {},
-              []
-            )
-            @list_layout = [root_list]
-            list_items.each do |li|
-              if li.nest[0..-2] == @list_nest
-                list = Ast::List.new(
-                  {},
-                  []
-                )
-                @list_layout.last << list
-                @list_layout << list
-                @list_nest = li.nest
-              elsif li.nest == @list_nest[0..-2]
-                @list_layout.pop
-                @list_nest = li.nest
-              end
-              @list_layout.last << li.build(filter)
-            end
-            root_list
-          end
-          def list_items
-            [li] + more_lis.elements.map {|e| e.li } 
-          end
-        }
-      end
-  
-      rule spaces
-        [\s]+
-      end
-  
-      rule list_start
-        nest:"#"+ [\s]
-      end
-  
-      rule li
-        list_start content:list_text {
-          def nest
-            list_start.nest.text_value
-          end
-          
-          def build(filter)
-            Ast::ListItem.new(
-              {},
-              content.text_value
-            )
-          end
-        }
-      end
-
-      rule list_text
-        (!(li_end) .)+ &li_end
-      end
-  
-      rule li_end
-        "\n" list_start / block_end
-      end
-  
       rule block_text
         (!double_newline .)+
       end
   
-      rule block_end
-        double_newline / !(.)
-      end
-  
-      rule double_newline
-        "\n\n"
-      end
     end
 
   end
