@@ -31,17 +31,26 @@ module RedCloth
       rule list
         li more_lis:("\n" li)* {
           def build(filter)
-            @list_layout = li.nest
-            Ast::List.new(
+            @list_nest = li.nest
+            root_list = Ast::List.new(
               {},
-              list_items.map do |li|
-                if li.nest == @list_layout
-                  li.build(filter)
-                else
-                  Ast::List.new({}, [li.build(filter)])
-                end
-              end
+              []
             )
+            @list_layout = [root_list]
+            @current_list_index = 0
+            list_items.each do |li|
+              if li.nest[0..-2] == @list_nest
+                list = Ast::List.new(
+                  {},
+                  []
+                )
+                @list_layout[@current_list_index] << list
+                @list_layout << list
+                @current_list_index += 1
+              end
+              @list_layout[@current_list_index] << li.build(filter)
+            end
+            root_list
           end
           def list_items
             [li] + more_lis.elements.map {|e| e.li } 
