@@ -3,11 +3,14 @@ module RedCloth
     grammar List
       include Common
       rule list
-        li more_lis:("\n" li)* {
+        list_class_id:css_class_id?
+        li 
+        more_lis:("\n" li)* {
           def build(filter)
             @list_nest = li.nest
+            list_opts = list_class_id.empty? ? {} : list_class_id.to_opts
             root_list = Ast::List.new(
-              {},
+              list_opts,
               []
             )
             @list_layout = [root_list]

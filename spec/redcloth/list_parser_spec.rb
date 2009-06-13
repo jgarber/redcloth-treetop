@@ -48,8 +48,7 @@ module RedCloth
       end
       
       it "should parse class on the list" do
-        pending
-        parse("# one\n# two").to_sexp.should ==
+        parse("(myclass)# one\n# two").to_sexp.should ==
           [:list, {:class => "myclass"}, [
             [:list_item, {}, "one"],
             [:list_item, {}, "two"]]

@@ -3,7 +3,15 @@ module RedCloth
     grammar Attributes
     
       rule css_class_id
-        "(" (css_id / css_classes / css_classes css_id) ")"
+        "(" contents:(css_id / css_classes css_id / css_classes) ")" {
+          def to_opts
+            opts = {}
+            css_class, css_id = contents.text_value.split('#')
+            opts[:class] = css_class unless css_class.blank?
+            opts[:id] = css_id unless css_id.nil?
+            opts
+          end
+        }
       end
     
       rule css_classes
@@ -11,7 +19,7 @@ module RedCloth
       end
     
       rule css_class
-        [_a-z] [_a-z0-9-]+
+        [_a-z] [_a-z0-9-]*
       end
       
       rule css_id
