@@ -55,6 +55,22 @@ module RedCloth
           ]
       end
       
+      it "should parse class/id attributes on the first list item" do
+        parse("#(myclass#myid) one\n# two").to_sexp.should ==
+          [:list, {}, [
+            [:list_item, {:class => "myclass", :id => "myid"}, "one"],
+            [:list_item, {}, "two"]]
+          ]
+      end
+      
+      it "should parse class/id attributes on the second list item" do
+        parse("# one\n#(myclass#myid) two").to_sexp.should ==
+          [:list, {}, [
+            [:list_item, {}, "one"],
+            [:list_item, {:class => "myclass", :id => "myid"}, "two"]]
+          ]
+      end
+      
     end
 
   end
