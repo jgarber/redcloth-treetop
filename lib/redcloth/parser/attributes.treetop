@@ -23,7 +23,7 @@ module RedCloth
       end
       
       rule css_id
-        "#" [_a-z0-9-]+
+        "#" [_a-z] [_a-z0-9-]*
       end
     
     end

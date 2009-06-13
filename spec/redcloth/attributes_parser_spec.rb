@@ -37,6 +37,35 @@ module RedCloth
         parse("(myclass otherclass#myid)").to_opts.should == {:class => "myclass otherclass", :id => "myid"}
       end
       
+      it "should parse valid ids" do
+        lambda { parse("(#my-id)") }.should_not raise_error
+        lambda { parse("(#my_id)") }.should_not raise_error
+        lambda { parse("(#my-id-9)") }.should_not raise_error
+        lambda { parse("(#a44)") }.should_not raise_error
+        lambda { parse("(#b)") }.should_not raise_error
+      end
+      
+      it "should not parse invalid ids" do
+        lambda { parse("(#my id)") }.should raise_error
+        lambda { parse("(#my.id)") }.should raise_error
+        lambda { parse("(#9myid)") }.should raise_error
+        lambda { parse("(#-myid)") }.should raise_error
+      end
+      
+      it "should parse valid classes" do
+        lambda { parse("(my-class)") }.should_not raise_error
+        lambda { parse("(my_class)") }.should_not raise_error
+        lambda { parse("(my-class-7)") }.should_not raise_error
+        lambda { parse("(q99)") }.should_not raise_error
+        lambda { parse("(c)") }.should_not raise_error
+      end
+      
+      it "should not parse invalid classes" do
+        lambda { parse("(#my.class)") }.should raise_error
+        lambda { parse("(#9myclass)") }.should raise_error
+        lambda { parse("(#-myclass)") }.should raise_error
+      end
+      
     end
 
   end
