@@ -16,8 +16,7 @@ module RedCloth
         parse("# one\n# two").to_sexp.should ==
           [:list, {}, [
             [:list_item, {}, "one"],
-            [:list_item, {}, "two"]]
-          ]
+            [:list_item, {}, "two"]]]
       end
         
       it "should parse a nested list" do
@@ -51,24 +50,36 @@ module RedCloth
         parse("(myclass)# one\n# two").to_sexp.should ==
           [:list, {:class => "myclass"}, [
             [:list_item, {}, "one"],
-            [:list_item, {}, "two"]]
-          ]
+            [:list_item, {}, "two"]]]
       end
       
       it "should parse class/id attributes on the first list item" do
         parse("#(myclass#myid) one\n# two").to_sexp.should ==
           [:list, {}, [
             [:list_item, {:class => "myclass", :id => "myid"}, "one"],
-            [:list_item, {}, "two"]]
-          ]
+            [:list_item, {}, "two"]]]
       end
       
       it "should parse class/id attributes on the second list item" do
         parse("# one\n#(myclass#myid) two").to_sexp.should ==
           [:list, {}, [
             [:list_item, {}, "one"],
-            [:list_item, {:class => "myclass", :id => "myid"}, "two"]]
-          ]
+            [:list_item, {:class => "myclass", :id => "myid"}, "two"]]]
+      end
+      
+      it "should parse class/id on a nested list" do
+        parse("# one\n(myclass#myid)## one.two").to_sexp.should ==
+          [:list, {}, [
+            [:list_item, {}, "one"],
+            [:list, {:class => "myclass", :id => "myid"}, [
+              [:list_item, {}, "one.two"]]]]]
+      end
+      
+      it "should discard class/id on a list item that does not start a list" do
+        parse("# one\n(myclass#myid)# two").to_sexp.should ==
+          [:list, {}, [
+            [:list_item, {}, "one"],
+            [:list_item, {}, "two"]]]
       end
       
     end
