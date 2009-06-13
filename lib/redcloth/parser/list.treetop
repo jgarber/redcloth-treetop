@@ -1,3 +1,5 @@
+require "redcloth/parser/common"
+
 module RedCloth
   module Parser
     grammar List

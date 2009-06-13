@@ -1,3 +1,5 @@
+require "redcloth/parser/list"
+
 module RedCloth
   module Parser
     grammar TextileDoc

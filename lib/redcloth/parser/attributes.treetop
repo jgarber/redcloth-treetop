@@ -1,30 +1,25 @@
+require "redcloth/parser/attributes/class_id"
+
 module RedCloth
   module Parser
     grammar Attributes
-    
-      rule css_class_id
-        "(" contents:(css_id / css_classes css_id / css_classes) ")" {
-          def to_opts
-            opts = {}
-            css_class, css_id = contents.text_value.split('#')
-            opts[:class] = css_class unless css_class.blank?
-            opts[:id] = css_id unless css_id.nil?
-            opts
-          end
-        }
-      end
-    
-      rule css_classes
-        css_class ([\s] css_class)*
-      end
-    
-      rule css_class
-        [_a-z] [_a-z0-9-]*
+      include ClassId
+      
+      rule attributes
+        css_class_id / alignment
       end
       
-      rule css_id
-        "#" [_a-z] [_a-z0-9-]*
+      # Alignment attributes
+      rule alignment
+        "<"
       end
+      # A_LEFT_noactions = "<" ;
+      # A_RIGHT_noactions = ">" ;
+      # A_JUSTIFIED_noactions = "<>" ;
+      # A_CENTER_noactions = "=" ;
+      # A_PADLEFT_noactions = "(" ;
+      # A_PADRIGHT_noactions = ")"  ;
+      # A_HLGN_noactions = ( A_LEFT_noactions | A_RIGHT_noactions | A_JUSTIFIED_noactions | A_CENTER_noactions | A_PADLEFT_noactions | A_PADRIGHT_noactions ) ;
     
     end
   end

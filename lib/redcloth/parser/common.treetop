@@ -1,3 +1,5 @@
+require "redcloth/parser/attributes"
+
 module RedCloth
   module Parser
     grammar Common
