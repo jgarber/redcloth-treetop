@@ -1,4 +1,4 @@
-require "redcloth/parser/attributes/class_id"
+require File.dirname(__FILE__) + "/attributes/class_id"
 
 module RedCloth
   module Parser

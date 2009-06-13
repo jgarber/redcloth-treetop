@@ -1,4 +1,4 @@
-require "redcloth/parser/common"
+require File.dirname(__FILE__) + "/common"
 
 module RedCloth
   module Parser
