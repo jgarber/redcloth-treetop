@@ -4,22 +4,23 @@ module RedCloth
   module Parser
     grammar List
       include Common
+      
       rule list
-        list_class_id:css_class_id?
+        list_attributes:attributes?
         li 
         more_lis:("\n" li)* {
           def build(filter)
             @list_nest = li.nest
-            list_opts = list_class_id.empty? ? {} : list_class_id.to_opts
+            list_options = list_attributes.empty? ? {} : list_attributes.to_opts
             root_list = Ast::List.new(
-              list_opts,
+              list_options,
               []
             )
             @list_layout = [root_list]
             list_items.each do |li|
               if li.nest[0..-2] == @list_nest
-                list_class_id = li.list_start.list_class_id
-                list_opts = list_class_id.empty? ? {} : list_class_id.to_opts
+                list_attributes = li.list_start.list_attributes
+                list_opts = list_attributes.empty? ? {} : list_attributes.to_opts
                 list = Ast::List.new(
                   list_opts,
                   []
@@ -42,9 +43,9 @@ module RedCloth
       end
 
       rule list_start
-        list_class_id:css_class_id?
+        list_attributes:attributes?
         nest:"#"+
-        list_item_class_id:css_class_id?
+        list_item_attributes:attributes?
         [\s]
       end
 
@@ -56,8 +57,8 @@ module RedCloth
           end
     
           def build(filter)
-            list_item_class_id = list_start.list_item_class_id
-            list_item_opts = list_item_class_id.empty? ? {} : list_item_class_id.to_opts
+            list_item_attributes = list_start.list_item_attributes
+            list_item_opts = list_item_attributes.empty? ? {} : list_item_attributes.to_opts
             Ast::ListItem.new(
               list_item_opts,
               content.text_value
