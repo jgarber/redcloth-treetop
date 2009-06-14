@@ -4,8 +4,7 @@ module RedCloth
       
       rule inline
         (
-          bold /
-          strong
+          inline_element
         )+ {
           def build(filter)
             Ast::Inline.new(
@@ -15,26 +14,50 @@ module RedCloth
         }
       end
       
+      rule inline_element
+        strong /
+        em /
+        default
+      end
+      
       rule strong
-        '*' contents:(!'*' .)+ '*' {
+        '*' contents:(!'*' inline_element)+ '*' {
           def build(filter)
             Ast::InlineElement.new(
               {:type => :strong},
-              contents.text_value
+              contents.elements.map {|e| e.elements[1].build(filter) }
             )
           end
         }
       end
       
-      rule bold
-        '**' contents:(!'**' .)+ '**' {
+      rule default
+        . {
+          def build(filter)
+            text_value
+          end
+        }
+      end
+      
+      # rule bold
+      #   '**' contents:(!'**' .)+ '**' {
+      #     def build(filter)
+      #       Ast::InlineElement.new(
+      #         {:type => :bold},
+      #         contents.FIXME
+      #       )
+      #     end
+      #   }
+      # end
+      
+      rule em
+        '_' contents:(!'_' inline_element)+ '_' {
           def build(filter)
             Ast::InlineElement.new(
-              {:type => :bold},
-              contents.text_value
+              {:type => :em},
+              contents.elements.map {|e| e.elements[1].build(filter) }
             )
           end
-          
         }
       end
       

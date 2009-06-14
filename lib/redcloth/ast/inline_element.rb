@@ -8,7 +8,7 @@ module RedCloth
       end
       
       def to_sexp
-        [@opts.delete(:type), @opts, @contents]
+        [@opts.delete(:type), @opts, @contents.map {|e| e.is_a?(String) ? e : e.to_sexp }]
       end
       
     end

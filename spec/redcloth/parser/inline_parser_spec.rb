@@ -14,12 +14,24 @@ module RedCloth
       
       it "should parse a strong phrase" do
         parse("*don't you dare!*").to_sexp.should ==
-          [[:strong, {}, "don't you dare!"]]
+          [[:strong, {}, ["don't you dare!"]]]
+      end
+      
+      it "should parse an emphasized phrase" do
+        parse("_emphasized_").to_sexp.should ==
+          [[:em, {}, ["emphasized"]]]
+      end
+      
+      it "should parse an emphasized phrase inside a strong phrase" do
+        parse("*_em in strong_*").to_sexp.should ==
+          [[:strong, {}, [
+            [:em, {}, ["em in strong"]]]]]
       end
       
       it "should parse a bold phrase" do
+        pending
         parse("**complete all required fields**").to_sexp.should ==
-          [[:bold, {}, "complete all required fields"]]
+          [[:bold, {}, ["complete all required fields"]]]
       end
       
     end
