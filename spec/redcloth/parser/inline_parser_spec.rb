@@ -12,6 +12,11 @@ module RedCloth
         @parser.parse_or_fail(string)
       end
       
+      it "should parse a plain-text phrase" do
+        parse("Just plain text.").to_sexp.should ==
+          ["Just plain text."]
+      end
+      
       it "should parse a strong phrase" do
         parse("*don't you dare!*").to_sexp.should ==
           [[:strong, {}, ["don't you dare!"]]]
