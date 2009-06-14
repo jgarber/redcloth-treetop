@@ -28,8 +28,13 @@ module RedCloth
             [:em, {}, ["em in strong"]]]]]
       end
       
+      it "should parse a strong phrase inside an emphasized phrase" do
+        parse("_*strong in em*_").to_sexp.should ==
+          [[:em, {}, [
+            [:strong, {}, ["strong in em"]]]]]
+      end
+      
       it "should parse a bold phrase" do
-        pending
         parse("**complete all required fields**").to_sexp.should ==
           [[:bold, {}, ["complete all required fields"]]]
       end

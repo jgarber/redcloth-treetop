@@ -15,6 +15,7 @@ module RedCloth
       end
       
       rule inline_element
+        bold /
         strong /
         em /
         default
@@ -39,16 +40,16 @@ module RedCloth
         }
       end
       
-      # rule bold
-      #   '**' contents:(!'**' .)+ '**' {
-      #     def build(filter)
-      #       Ast::InlineElement.new(
-      #         {:type => :bold},
-      #         contents.FIXME
-      #       )
-      #     end
-      #   }
-      # end
+      rule bold
+        '**' contents:(!'**' inline_element)+ '**' {
+          def build(filter)
+            Ast::InlineElement.new(
+              {:type => :bold},
+              contents.elements.map {|e| e.elements[1].build(filter) }
+            )
+          end
+        }
+      end
       
       rule em
         '_' contents:(!'_' inline_element)+ '_' {
