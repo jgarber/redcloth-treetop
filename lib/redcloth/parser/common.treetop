@@ -12,9 +12,25 @@ module RedCloth
       rule block_end
         double_newline / !(.)
       end
-  
+
+      rule newline
+        "\r"? "\n"
+      end
+
       rule double_newline
-        "\n\n"
+        newline newline
+      end
+      
+      rule chars
+        [^\s\r\n\t]+
+      end
+      
+      rule mspace
+        !double_newline ( [\s\t] / newline )+
+      end
+      
+      rule mtext
+        chars (mspace chars)*
       end
       
     end
