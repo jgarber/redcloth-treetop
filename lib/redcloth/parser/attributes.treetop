@@ -1,26 +1,23 @@
 require File.dirname(__FILE__) + "/attributes/class_id"
+require File.dirname(__FILE__) + "/attributes/alignment"
 
 module RedCloth
   module Parser
     grammar Attributes
       include ClassId
+      include Alignment
       
       rule attributes
-        css_class_id / alignment
+        (
+          css_class_id /
+          alignment
+        )+ {
+          def to_opts(opts={})
+            elements.inject(opts) { |prev_opts, element| element.to_opts(prev_opts) }
+          end
+        }
       end
       
-      # Alignment attributes
-      rule alignment
-        "<"
-      end
-      # A_LEFT_noactions = "<" ;
-      # A_RIGHT_noactions = ">" ;
-      # A_JUSTIFIED_noactions = "<>" ;
-      # A_CENTER_noactions = "=" ;
-      # A_PADLEFT_noactions = "(" ;
-      # A_PADRIGHT_noactions = ")"  ;
-      # A_HLGN_noactions = ( A_LEFT_noactions | A_RIGHT_noactions | A_JUSTIFIED_noactions | A_CENTER_noactions | A_PADLEFT_noactions | A_PADRIGHT_noactions ) ;
-    
     end
   end
 end

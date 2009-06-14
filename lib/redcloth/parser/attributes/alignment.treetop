@@ -1,0 +1,81 @@
+module RedCloth
+  module Parser
+    module Attributes
+      grammar Alignment
+        
+        # Alignment attributes
+        rule alignment
+          (
+            align_justified / 
+            align_left / 
+            align_right / 
+            align_centered /
+            pad_left /
+            pad_right
+          )+ {
+            def to_opts(opts={})
+              elements.inject(opts) { |prev_opts, element| element.to_opts(prev_opts) }
+            end
+          }
+        end
+        
+        rule align_left
+          "<" {
+            def to_opts(opts)
+              opts[:align] ||= "left"
+              opts
+            end
+          }
+        end
+
+        rule align_right
+          ">" {
+            def to_opts(opts)
+              opts[:align] ||= "right"
+              opts
+            end
+          }
+        end
+
+        rule align_justified
+          "<>" {
+            def to_opts(opts)
+              opts[:align] ||= "justify"
+              opts
+            end
+          }
+        end
+
+        rule align_centered
+          "=" {
+            def to_opts(opts)
+              opts[:align] ||= "center"
+              opts
+            end
+          }
+        end
+        
+        rule pad_left
+          "(" ![a-z#] {
+            def to_opts(opts)
+              opts[:padding_left] ||= 0
+              opts[:padding_left] += 1
+              opts
+            end
+          }
+        end
+        
+        rule pad_right
+          ")" {
+            def to_opts(opts)
+              opts[:padding_right] ||= 0
+              opts[:padding_right] += 1
+              opts
+            end
+          }
+        end
+        
+      end
+    end
+  end
+end

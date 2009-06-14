@@ -5,8 +5,7 @@ module RedCloth
       
         rule css_class_id
           "(" contents:(css_id / css_classes css_id / css_classes) ")" {
-            def to_opts
-              opts = {}
+            def to_opts(opts={})
               css_class, css_id = contents.text_value.split('#')
               opts[:class] = css_class unless css_class.blank?
               opts[:id] = css_id unless css_id.nil?
