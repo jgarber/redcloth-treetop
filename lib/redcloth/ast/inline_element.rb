@@ -8,7 +8,22 @@ module RedCloth
       end
       
       def to_sexp
-        [@opts.delete(:type), @opts, @contents.map {|e| e.is_a?(String) ? e : e.to_sexp }]
+        [@opts.delete(:type), @opts, contents]
+      end
+      
+      def contents
+        @contents.inject([]) do |a, e|
+          if e.is_a?(String)
+            if a.last.is_a?(String)
+              a.last << e
+            else
+              a << e
+            end
+          else
+            a << e.to_sexp
+          end
+          a
+        end
       end
       
     end
