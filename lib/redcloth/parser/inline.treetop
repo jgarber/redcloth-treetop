@@ -4,6 +4,7 @@ module RedCloth
       
       rule inline
         (
+          bold /
           strong
         )+ {
           def build(filter)
@@ -22,6 +23,18 @@ module RedCloth
               contents.text_value
             )
           end
+        }
+      end
+      
+      rule bold
+        '**' contents:(!'**' .)+ '**' {
+          def build(filter)
+            Ast::InlineElement.new(
+              {:type => :bold},
+              contents.text_value
+            )
+          end
+          
         }
       end
       

@@ -17,6 +17,11 @@ module RedCloth
           [[:strong, {}, "don't you dare!"]]
       end
       
+      it "should parse a bold phrase" do
+        parse("**complete all required fields**").to_sexp.should ==
+          [[:bold, {}, "complete all required fields"]]
+      end
+      
     end
   end
 end
