@@ -22,12 +22,28 @@ module RedCloth
           [[:strong, {}, ["don't you dare!"]]]
       end
       
+      it "should parse a phrase with asterisks that is not a strong phrase" do
+        parse("yes * we * can").to_sexp.should ==
+         ["yes * we * can"]
+      end
+
+      it "should parse a strong phrase that is invalid as non-strong because it has space at the end" do
+        parse("yeah *that's * it!").to_sexp.should ==
+         ["yeah *that's * it!"]
+      end
+      
+      it "should allow asterisks preceded by a space in bolded phrase" do
+        parse("compute *2 * 7*").to_sexp.should ==
+          ["compute ", [:strong, {}, ["2 * 7"]]]
+      end
+      
       it "should parse an emphasized phrase" do
         parse("_emphasized_").to_sexp.should ==
           [[:em, {}, ["emphasized"]]]
       end
       
       it "should parse an emphasized phrase inside a strong phrase" do
+        pending
         parse("*_em in strong_*").to_sexp.should ==
           [[:strong, {}, [
             [:em, {}, ["em in strong"]]]]]
