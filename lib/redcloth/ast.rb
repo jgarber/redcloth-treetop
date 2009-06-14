@@ -2,6 +2,8 @@ require 'redcloth/ast/textile_doc'
 require 'redcloth/ast/paragraph'
 require 'redcloth/ast/list'
 require 'redcloth/ast/list_item'
+require 'redcloth/ast/inline'
+require 'redcloth/ast/inline_element'
 
 module RedCloth
   # Classes in this module represent the Abstract Syntax Tree (AST)

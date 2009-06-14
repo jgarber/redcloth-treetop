@@ -1,0 +1,30 @@
+module RedCloth
+  module Parser
+    grammar Inline
+      
+      rule inline
+        (
+          strong
+        )+ {
+          def build(filter)
+            Ast::Inline.new(
+              elements.map {|e| e.build(filter) }
+            )
+          end
+        }
+      end
+      
+      rule strong
+        '*' contents:(!'*' .)+ '*' {
+          def build(filter)
+            Ast::InlineElement.new(
+              {:type => :strong},
+              contents.text_value
+            )
+          end
+        }
+      end
+      
+    end
+  end
+end
