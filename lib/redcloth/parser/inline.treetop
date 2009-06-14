@@ -1,6 +1,9 @@
+require File.dirname(__FILE__) + "/common"
+
 module RedCloth
   module Parser
     grammar Inline
+      include Common
       
       rule inline
         (
@@ -20,25 +23,19 @@ module RedCloth
         em /
         default
       end
-      
+       
       rule strong
-        '*' contents:(!'*' inline_element)+ '*' {
+        '*' ![\s] contents:((!([^\s] '*') inline_element)* (![\s] inline_element)) '*' {
           def build(filter)
             Ast::InlineElement.new(
               {:type => :strong},
-              contents.elements.map {|e| e.elements[1].build(filter) }
+              # contents.elements.map {|e| e.elements[1].build(filter) }
+              [contents.text_value]
             )
           end
         }
       end
       
-      rule default
-        . {
-          def build(filter)
-            text_value
-          end
-        }
-      end
       
       rule bold
         '**' contents:(!'**' inline_element)+ '**' {
@@ -58,6 +55,14 @@ module RedCloth
               {:type => :em},
               contents.elements.map {|e| e.elements[1].build(filter) }
             )
+          end
+        }
+      end
+      
+      rule default
+        . {
+          def build(filter)
+            text_value
           end
         }
       end
