@@ -1,50 +1,31 @@
 require File.dirname(__FILE__) + "/common"
+require File.dirname(__FILE__) + "/inline/common_inline"
+require File.dirname(__FILE__) + "/inline/strong"
 
 module RedCloth
   module Parser
     grammar Inline
       include Common
+      include CommonInline
+      include Strong
       
       rule inline
-        element_1:inline_element
+        element_1:catchall_inline_element
         punct_1:punct
-        more_elements:(inline_spaces inline_element punct)* {
+        more_elements:(inline_spaces catchall_inline_element punct)* {
           def build(filter)
             Ast::Inline.new(
               all_inline_elements.map {|e| e.build(filter) }
             )
           end
           def all_inline_elements
-            [element_1, punct_1] + more_elements.elements.map {|e| [e.inline_spaces, e.inline_element, e.punct] }.flatten
+            [element_1, punct_1] + more_elements.elements.map {|e| [e.inline_spaces, e.catchall_inline_element, e.punct] }.flatten
           end
         }
       end
       
-      rule inline_element
-        bold /
-        strong /
-        # em /
-        word
-      end
-      
-      rule punct
-        [?.!]* {
-          def build(filter)
-            text_value
-          end
-        }
-      end
-      
-      rule end_strong
-        '*' ![a-zA-Z0-9]
-      end
-      
-      rule inline_spaces
-        [\s\t]+ {
-          def build(filter)
-            text_value
-          end
-        }
+      rule catchall_inline_element
+        inline_element / word
       end
       
       rule word
@@ -55,47 +36,9 @@ module RedCloth
         }
       end
       
-      rule strong_inline
-        element_1:strong_inline_element
-        more_elements:(inline_spaces strong_inline_element)* {
-          def all_inline_elements
-            [element_1] + more_elements.elements.map {|e| [e.inline_spaces, e.strong_inline_element] }.flatten
-          end
-        }
-      end
-      
       rule strong_inline_element
-        bold /
-        strong /
-        # em /
+        inline_element /
         strong_word
-      end
-      
-      rule strong_word
-      # ('*' [-'"'a-zA-Z0-9.!?]+ / '*' / [-'"'a-zA-Z0-9.!?]+) {
-      # ( ( !([-'"'a-zA-Z0-9.!?] [*\s]) [-'"'a-zA-Z0-9.!?*] )* [-'"'a-zA-Z0-9.!?] ) {
-        ((
-          [-'"'a-zA-Z0-9.!] / 
-          '*' &(![\s\t_?] .)
-        )+ /
-        '*') {
-          def build(filter)
-            text_value
-          end
-        }
-      end
-      
-      rule strong
-        '*' !'*' contents:strong_inline '*' {
-          def build(filter)
-            Ast::InlineElement.new(
-              {:type => :strong},
-              # contents.elements.map {|e| e.elements[1].build(filter) }
-              # [contents.text_value]
-              contents.all_inline_elements.map {|e| e.build(filter) }
-            )
-          end
-        }
       end
       
       rule bold_inline

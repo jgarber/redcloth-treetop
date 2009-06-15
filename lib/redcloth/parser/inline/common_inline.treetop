@@ -1,0 +1,29 @@
+module RedCloth
+  module Parser
+    grammar CommonInline
+      
+      rule inline_element
+        bold /
+        strong #/
+        # em /
+      end
+      
+      rule punct
+        [?.!]* {
+          def build(filter)
+            text_value
+          end
+        }
+      end
+      
+      rule inline_spaces
+        [\s\t]+ {
+          def build(filter)
+            text_value
+          end
+        }
+      end
+      
+    end
+  end
+end
