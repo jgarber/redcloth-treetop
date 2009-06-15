@@ -16,7 +16,7 @@ module RedCloth
             if a.last.is_a?(String)
               a.last << e
             else
-              a << e
+              a << e unless e.blank?
             end
           else
             a << e.to_sexp
