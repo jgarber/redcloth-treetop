@@ -37,6 +37,11 @@ module RedCloth
           ["compute ", [:strong, {}, ["2 * 7"]]]
       end
       
+      it "should allow a bolded phrase to contain asterisks in a word" do
+        parse("Are you *veg*an*?").to_sexp.should ==
+          ["Are you ", [:strong, {}, ["veg*an"]], "?"]
+      end
+      
       it "should parse an emphasized phrase" do
         parse("_emphasized_").to_sexp.should ==
           [[:em, {}, ["emphasized"]]]
