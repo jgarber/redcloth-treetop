@@ -11,8 +11,6 @@ module RedCloth
             def build(filter)
               Ast::InlineElement.new(
                 {:type => :strong},
-                # contents.elements.map {|e| e.elements[1].build(filter) }
-                # [contents.text_value]
                 contents.all_inline_elements.map {|e| e.build(filter) }
               )
             end
@@ -21,10 +19,10 @@ module RedCloth
         
         rule strong_inline
           element_1:strong_inline_element
-          punct_1:punct
+          punct
           more_elements:(inline_spaces strong_inline_element punct)* {
             def all_inline_elements
-              [element_1, punct_1] + more_elements.elements.map {|e| [e.inline_spaces, e.strong_inline_element, e.punct] }.flatten
+              [element_1, punct] + more_elements.elements.map {|e| e.elements }.flatten
             end
           }
         end
@@ -33,13 +31,10 @@ module RedCloth
           strong_word
         end
         
-
         rule strong_word
-        # ('*' [-'"'a-zA-Z0-9.!?]+ / '*' / [-'"'a-zA-Z0-9.!?]+) {
-        # ( ( !([-'"'a-zA-Z0-9.!?] [*\s]) [-'"'a-zA-Z0-9.!?*] )* [-'"'a-zA-Z0-9.!?] ) {
           ((
             [-'"'a-zA-Z0-9.!] / 
-            '*' &(![\s\t_?] .)
+            '*' &(![^a-zA-Z0-9*] .)
           )+ /
           '*') {
             def build(filter)

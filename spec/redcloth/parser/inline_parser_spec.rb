@@ -12,6 +12,8 @@ module RedCloth
         @parser.parse_or_fail(string)
       end
       
+      ### plain text ###
+      
       it "should parse a plain-text phrase" do
         parse("Just plain text.").to_sexp.should ==
           ["Just plain text."]
@@ -26,6 +28,8 @@ module RedCloth
         parse("yeah *that's * it!").to_sexp.should ==
          ["yeah *that's * it!"]
       end
+      
+      ### strong ###
       
       it "should parse a strong phrase" do
         parse("*strong phrase*").to_sexp.should ==
@@ -42,10 +46,12 @@ module RedCloth
           ["Are you ", [:strong, {}, ["veg*an"]], "?"]
       end
       
-      it "should parse an emphasized phrase" do
-        pending
-        parse("_emphasized_").to_sexp.should ==
-          [[:em, {}, ["emphasized"]]]
+      it "should parse a bold phrase inside a strong phrase" do
+        parse("*this is **bold** see*").to_sexp.should ==
+          [[:strong, {}, [
+            "this is ",
+            [:bold, {}, ["bold"]],
+            " see"]]]
       end
       
       it "should parse an emphasized phrase inside a strong phrase" do
@@ -55,6 +61,14 @@ module RedCloth
             [:em, {}, ["em in strong"]]]]]
       end
       
+      ### em ###
+      
+      it "should parse an emphasized phrase" do
+        pending
+        parse("_emphasized_").to_sexp.should ==
+          [[:em, {}, ["emphasized"]]]
+      end
+      
       it "should parse a strong phrase inside an emphasized phrase" do
         pending
         parse("_*strong in em*_").to_sexp.should ==
@@ -62,17 +76,11 @@ module RedCloth
             [:strong, {}, ["strong in em"]]]]]
       end
       
+      ### bold ###
+      
       it "should parse a bold phrase" do
         parse("**complete all required fields**").to_sexp.should ==
           [[:bold, {}, ["complete all required fields"]]]
-      end
-      
-      it "should parse a bold phrase inside a strong phrase" do
-        parse("*this is **bold** see*").to_sexp.should ==
-          [[:strong, {}, [
-            "this is ",
-            [:bold, {}, ["bold"]],
-            " see"]]]
       end
       
       describe "bold_word rule" do

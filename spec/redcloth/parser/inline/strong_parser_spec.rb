@@ -8,21 +8,21 @@ module RedCloth
         before :each do
           @parser = StrongParser.new
         end
-      
+        
         def parse(string)
           @parser.parse_or_fail(string)
         end
-      
+        
         it "should parse a strong phrase" do
           parse("*don't you dare!*").to_sexp.should ==
             [:strong, {}, ["don't you dare!"]]
         end
-      
+        
         it "should allow asterisks as words in a strong phrase" do
           parse("*2 * 7*").to_sexp.should ==
             [:strong, {}, ["2 * 7"]]
         end
-
+        
         it "should allow a strong phrase to contain asterisks in a word" do
           parse("*veg*an*").to_sexp.should ==
             [:strong, {}, ["veg*an"]]
@@ -58,6 +58,22 @@ module RedCloth
           it "should not include trailing asterisk in a word if the next char is a question mark" do
             @parser.consume_all_input = false
             parse("yow*?").should == "yow"
+          end
+          it "should not include trailing asterisk in a word if the next char is an exclamation mark" do
+            @parser.consume_all_input = false
+            parse("yow*!").should == "yow"
+          end
+          it "should not include trailing asterisk in a word if the next char starts an HTML tag" do
+            @parser.consume_all_input = false
+            parse("yow*</span>").should == "yow"
+          end
+          it "should not include trailing asterisk in a word if the next char is a double quote" do
+            @parser.consume_all_input = false
+            parse("yow*\"").should == "yow"
+          end
+          it "should not include trailing asterisk in a word if the next char is a single quote" do
+            @parser.consume_all_input = false
+            parse("yow*'").should == "yow"
           end
         end
            

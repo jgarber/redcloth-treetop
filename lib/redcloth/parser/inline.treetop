@@ -11,7 +11,7 @@ module RedCloth
       
       rule inline
         element_1:catchall_inline_element
-        punct_1:punct
+        punct
         more_elements:(inline_spaces catchall_inline_element punct)* {
           def build(filter)
             Ast::Inline.new(
@@ -19,7 +19,7 @@ module RedCloth
             )
           end
           def all_inline_elements
-            [element_1, punct_1] + more_elements.elements.map {|e| [e.inline_spaces, e.catchall_inline_element, e.punct] }.flatten
+            [element_1, punct] + more_elements.elements.map {|e| e.elements }.flatten
           end
         }
       end
