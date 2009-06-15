@@ -26,15 +26,37 @@ module RedCloth
         parse("p. This is my paragraph").to_sexp.should ==
           [[:paragraph, {}, ["This is my paragraph"]]]
       end
+      
+      it "should parse two paragraphs" do
+        parse("One paragraph.\n\nTwo paragraphs.").to_sexp.should ==
+          [[:paragraph, {}, ["One paragraph."]],
+           [:paragraph, {}, ["Two paragraphs."]]]
+      end
         
       it "should parse a basic list followed by double newline" do
-        r = @parser.parse_or_fail("# one\n# two\n\n")
-        # require "rubygems"; require "ruby-debug"; debugger 
         parse("# one\n# two\n\n").to_sexp.should ==
           [[:list, {}, [
             [:list_item, {}, ["one"]],
             [:list_item, {}, ["two"]]]
           ]]
+      end
+      
+      it "should parse a list followed by paragraph" do
+        parse("# one\n# two\n\nA paragraph.").to_sexp.should ==
+          [ [:list, {}, [
+              [:list_item, {}, ["one"]],
+              [:list_item, {}, ["two"]]]],
+            [:paragraph, {}, ["A paragraph."]]
+          ]
+      end
+      
+      it "should parse a paragraph followed by a list" do
+        parse("A paragraph.\n\n# one\n# two").to_sexp.should ==
+          [ [:paragraph, {}, ["A paragraph."]],
+            [:list, {}, [
+              [:list_item, {}, ["one"]],
+              [:list_item, {}, ["two"]]]]
+          ]
       end
       
       describe "InlineParser integration" do
