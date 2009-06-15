@@ -28,10 +28,12 @@ module RedCloth
       end
         
       it "should parse a basic list followed by double newline" do
+        r = @parser.parse_or_fail("# one\n# two\n\n")
+        # require "rubygems"; require "ruby-debug"; debugger 
         parse("# one\n# two\n\n").to_sexp.should ==
           [[:list, {}, [
-            [:list_item, {}, "one"],
-            [:list_item, {}, "two"]]
+            [:list_item, {}, ["one"]],
+            [:list_item, {}, ["two"]]]
           ]]
       end
       
@@ -43,6 +45,15 @@ module RedCloth
               "This is ",
               [:strong, {}, ["my"]],
               " paragraph"]]]
+        end
+        
+        it "should parse a basic list that contains inline strong" do
+          parse("# *one*\n# two\n\n").to_sexp.should ==
+            [[:list, {}, [
+              [:list_item, {}, [
+                [:strong, {}, ["one"]]]],
+              [:list_item, {}, ["two"]]]
+            ]]
         end
         
       end

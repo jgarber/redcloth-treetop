@@ -1,9 +1,11 @@
 require File.dirname(__FILE__) + "/common"
+require File.dirname(__FILE__) + "/inline"
 
 module RedCloth
   module Parser
     grammar List
       include Common
+      include Inline
       
       rule list
         list_attributes:attributes?
@@ -50,8 +52,7 @@ module RedCloth
       end
 
       rule li
-        list_start
-        content:list_text {
+        list_start inline &li_end {
           def nest
             list_start.nest.text_value
           end
@@ -61,19 +62,12 @@ module RedCloth
             list_item_opts = list_item_attributes.empty? ? {} : list_item_attributes.to_opts
             Ast::ListItem.new(
               list_item_opts,
-              content.text_value
+              inline.build(filter)
             )
           end
         }
       end
-
-      rule list_text
-        (!(li_end) .)+ &li_end
-      end
-
-      rule li_end
-        "\n" list_start / block_end
-      end
+      
     end
   end
 end

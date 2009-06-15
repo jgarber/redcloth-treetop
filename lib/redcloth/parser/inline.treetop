@@ -12,14 +12,16 @@ module RedCloth
       rule inline
         element_1:catchall_inline_element
         punct
-        more_elements:(inline_spaces catchall_inline_element punct)* {
+        more_elements:(!li_end inline_spaces catchall_inline_element punct)* {
           def build(filter)
             Ast::Inline.new(
               all_inline_elements.map {|e| e.build(filter) }
             )
           end
           def all_inline_elements
-            [element_1, punct] + more_elements.elements.map {|e| e.elements }.flatten
+            [element_1, punct] + more_elements.elements.map {|e| e.elements }.flatten.reject do |e|
+              e.text_value.blank?
+            end
           end
         }
       end

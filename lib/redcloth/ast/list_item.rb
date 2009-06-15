@@ -2,12 +2,12 @@ module RedCloth
   module Ast
     class ListItem
       
-      def initialize(opts, text)
-        @opts, @text = opts, text
+      def initialize(opts, inline)
+        @opts, @inline = opts, inline
       end
       
       def to_sexp
-        [:list_item, @opts, @text]
+        [:list_item, @opts, @inline.to_sexp]
       end
       
     end
