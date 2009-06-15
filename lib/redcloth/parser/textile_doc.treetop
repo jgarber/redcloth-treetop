@@ -1,9 +1,11 @@
 require File.dirname(__FILE__) + "/list"
+require File.dirname(__FILE__) + "/inline"
 
 module RedCloth
   module Parser
     grammar TextileDoc
       include List
+      include Inline
       
       rule document
         block+ {
@@ -24,15 +26,11 @@ module RedCloth
       end
 
       rule paragraph
-        ("p." spaces)? block_text {
+        ("p." spaces)? inline {
           def build(filter)
-            Ast::Paragraph.new(block_text.text_value)
+            Ast::Paragraph.new({}, inline.build(filter))
           end
         }
-      end
-  
-      rule block_text
-        (!double_newline .)+
       end
   
     end
