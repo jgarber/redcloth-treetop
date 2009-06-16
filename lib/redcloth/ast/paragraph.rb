@@ -1,6 +1,7 @@
 module RedCloth
   module Ast
     class Paragraph
+      attr_reader :inline_contents
       
       def initialize(opts, inline_contents)
         @opts, @inline_contents = opts, inline_contents

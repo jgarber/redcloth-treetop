@@ -11,6 +11,12 @@ module RedCloth
         @block_elements.map {|e| e.to_sexp }
       end
       
+      def accept(visitor)
+        @block_elements.each do |block_element|
+          visitor.visit_block_element(block_element)
+        end
+      end
+      
     end
   end
 end
