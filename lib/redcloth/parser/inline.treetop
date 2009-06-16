@@ -1,6 +1,7 @@
 require File.dirname(__FILE__) + "/common"
 require File.dirname(__FILE__) + "/inline/common_inline"
 require File.dirname(__FILE__) + "/inline/strong"
+require File.dirname(__FILE__) + "/inline/bold"
 
 module RedCloth
   module Parser
@@ -8,6 +9,7 @@ module RedCloth
       include Common
       include CommonInline
       include Strong
+      include Bold
       
       rule inline
         super
@@ -20,45 +22,6 @@ module RedCloth
         word
       end
       
-      rule bold_inline
-        element_1:bold_inline_element
-        more_elements:(inline_spaces bold_inline_element)* {
-          def all_inline_elements
-            [element_1] + more_elements.elements.map {|e| [e.inline_spaces, e.bold_inline_element] }.flatten
-          end
-        }
-      end
-      
-      rule bold_inline_element
-        bold /
-        strong /
-        # em /
-        bold_word
-      end
-      
-      rule bold_word
-        ((
-          [-'"'a-zA-Z0-9.!] / 
-          '**' &(![\s\t_] .)
-        )+ /
-        '**') {
-          def build(filter)
-            text_value
-          end
-        }
-      end
-      
-      rule bold
-        '**' contents:bold_inline '**' {
-          def build(filter)
-            Ast::InlineElement.new(
-              {:type => :bold},
-              # contents.elements.map {|e| e.elements[1].build(filter) }
-              contents.all_inline_elements.map {|e| e.build(filter) }
-            )
-          end
-        }
-      end
       # 
       # rule em
       #   '_' contents:inline '_' {

@@ -79,47 +79,36 @@ module RedCloth
       ### bold ###
       
       it "should parse a bold phrase" do
-        parse("**complete all required fields**").to_sexp.should ==
-          [[:bold, {}, ["complete all required fields"]]]
+        parse("**bold phrase**").to_sexp.should ==
+          [[:bold, {}, ["bold phrase"]]]
       end
       
-      describe "bold_word rule" do
-        before(:each) { @parser.root = :bold_word }
-        
-        it "should parse a normal word" do
-          lambda { parse("word") }.should_not raise_error
-        end
-        it "should parse a word with a double-asterisk in it" do
-          parse("veg**an")
-        end
-        it "should parse a lone double-asterisk" do
-          parse("**")
-        end
-        it "should include leading double-asterisk in a word" do
-          parse("**yow").should == "**yow"
-        end
-        it "should not include trailing double-asterisk in a word if the next char is a space" do
-          @parser.consume_all_input = false
-          parse("yow** ").should == "yow"
-        end
-        it "should not include trailing double-asterisk in a word if the next char is EOF" do
-          @parser.consume_all_input = false
-          parse("yow**").should == "yow"
-        end
-        it "should include trailing asterisk in a word if the next char is a double-asterisk" do
-          @parser.consume_all_input = false
-          parse("yow***").should == "yow**"
-        end
-        it "should not include trailing double-asterisk in a word if the next char is an underscore" do
-          @parser.consume_all_input = false
-          parse("yow**_").should == "yow"
-        end
-        it "should include trailing double-asterisk in a word if the next char is a question mark" do
-          @parser.consume_all_input = false
-          parse("yow**?").should == "yow**"
-        end
+      it "should parse a bold phrase surrounded by plain text" do
+        parse("plain **bold phrase** plain").to_sexp.should ==
+          ["plain ", [:bold, {}, ["bold phrase"]], " plain"]
       end
-           
+      
+      it "should allow a bold phrase at the end of a sentence before punctuation" do
+        parse("Are you **veg*an**?").to_sexp.should ==
+          ["Are you ", [:bold, {}, ["veg*an"]], "?"]
+      end
+      
+      it "should parse a strong phrase inside a bold phrase" do
+        parse("**this is *strong* see**").to_sexp.should ==
+          [[:bold, {}, [
+            "this is ",
+            [:strong, {}, ["strong"]],
+            " see"]]]
+      end
+      
+      it "should parse an emphasized phrase inside a bold phrase" do
+        pending
+        parse("**_em in bold_**").to_sexp.should ==
+          [[:bold, {}, [
+            [:em, {}, ["em in bold"]]]]]
+      end
+      
+      
     end
   end
 end

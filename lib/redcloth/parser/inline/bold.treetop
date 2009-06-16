@@ -1,0 +1,27 @@
+require File.dirname(__FILE__) + "/common_inline"
+
+module RedCloth
+  module Parser
+    module Inline
+      grammar Bold
+        include CommonInline
+        
+        rule bold
+          '**' contents:inline end_bold {
+            def build(filter)
+              Ast::InlineElement.new(
+                {:type => :bold},
+                contents.all_inline_elements.map {|e| e.build(filter) }
+              )
+            end
+          }
+        end
+        
+        rule inline_element
+          word
+        end
+        
+      end
+    end
+  end
+end

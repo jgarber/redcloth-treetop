@@ -46,11 +46,18 @@ module RedCloth
         '*' !(![^a-zA-Z0-9*] .)
       end
       
+      rule end_bold
+        '**' !(![^a-zA-Z0-9*] .)
+      end
+      
       rule word
-        (( !(end_strong)
-          mchar
-        )+ /
-        '*') {
+        (
+          ( !(end_bold / end_strong)
+            mchar
+          )+ /
+          '**' /
+          '*'
+        ) {
           def build(filter)
             text_value
           end
