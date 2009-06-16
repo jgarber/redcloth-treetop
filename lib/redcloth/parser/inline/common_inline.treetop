@@ -1,11 +1,25 @@
+require File.dirname(__FILE__) + "/../common"
+
 module RedCloth
   module Parser
     grammar CommonInline
+      include Common
       
-      rule inline_element
-        bold /
-        strong #/
-        # em /
+      rule inline
+        element_1:inline_element
+        punct
+        more_elements:(!li_end inline_spaces inline_element punct)* {
+          def build(filter)
+            Ast::Inline.new(
+              all_inline_elements.map {|e| e.build(filter) }
+            )
+          end
+          def all_inline_elements
+            [element_1, punct] + more_elements.elements.map {|e| e.elements }.flatten.reject do |e|
+              e.text_value.blank?
+            end
+          end
+        }
       end
       
       rule punct
@@ -16,6 +30,10 @@ module RedCloth
         }
       end
       
+      rule mchar
+        [^\s\r\n\t]
+      end
+      
       rule inline_spaces
         [\s\t]+ {
           def build(filter)
@@ -23,6 +41,22 @@ module RedCloth
           end
         }
       end
+      
+      rule end_strong
+        '*' !(![^a-zA-Z0-9*] .)
+      end
+      
+      rule word
+        (( !(end_strong)
+          mchar
+        )+ /
+        '*') {
+          def build(filter)
+            text_value
+          end
+        }
+      end
+      
       
     end
   end

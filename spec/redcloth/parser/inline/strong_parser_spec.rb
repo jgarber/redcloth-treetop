@@ -28,8 +28,8 @@ module RedCloth
             [:strong, {}, ["veg*an"]]
         end
       
-        describe "strong_word rule" do
-          before(:each) { @parser.root = :strong_word }
+        describe "word rule" do
+          before(:each) { @parser.root = :word }
         
           it "should parse a normal word" do
             lambda { parse("word") }.should_not raise_error
