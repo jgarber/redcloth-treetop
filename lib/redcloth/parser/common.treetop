@@ -29,10 +29,6 @@ module RedCloth
         !double_newline ( [\s\t\r\n] )+
       end
       
-      rule mtext
-        chars (mspace chars)*
-      end
-      
       rule li_end
         ("\n" list_start / block_end) {
           def build(filter)

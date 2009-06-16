@@ -17,10 +17,6 @@ module RedCloth
           }
         end
         
-        rule inline_element
-          word
-        end
-        
       end
     end
   end

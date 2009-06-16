@@ -29,51 +29,46 @@ module RedCloth
         end
       
         describe "word rule" do
-          before(:each) { @parser.root = :word }
+          before(:each) do
+            @parser.root = :word
+            @parser.consume_all_input = false
+          end
         
           it "should parse a normal word" do
-            lambda { parse("word") }.should_not raise_error
+            parse("word").should == "word"
           end
           it "should parse a word with an asterisk in it" do
-            parse("veg*an")
+            parse("veg*an").should == "veg*an"
           end
           it "should parse a lone asterisk" do
-            parse("*")
+            parse("*").should == "*"
           end
           it "should include leading asterisk in a word" do
             parse("*yow").should == "*yow"
           end
           it "should not include trailing asterisk in a word if the next char is a space" do
-            @parser.consume_all_input = false
             parse("yow* ").should == "yow"
           end
           it "should include trailing asterisk in a word if the next char is an asterisk" do
             pending # FIXME: this conflicts with the basic bold rule, where a bold phrase ends with **
-            @parser.consume_all_input = false
             parse("yow**").should == "yow*"
           end
           it "should not include trailing asterisk in a word if the next char is an underscore" do
-            @parser.consume_all_input = false
             parse("yow*_").should == "yow"
           end
           it "should not include trailing asterisk in a word if the next char is a question mark" do
-            @parser.consume_all_input = false
             parse("yow*?").should == "yow"
           end
           it "should not include trailing asterisk in a word if the next char is an exclamation mark" do
-            @parser.consume_all_input = false
             parse("yow*!").should == "yow"
           end
           it "should not include trailing asterisk in a word if the next char starts an HTML tag" do
-            @parser.consume_all_input = false
             parse("yow*</span>").should == "yow"
           end
           it "should not include trailing asterisk in a word if the next char is a double quote" do
-            @parser.consume_all_input = false
             parse("yow*\"").should == "yow"
           end
           it "should not include trailing asterisk in a word if the next char is a single quote" do
-            @parser.consume_all_input = false
             parse("yow*'").should == "yow"
           end
         end

@@ -32,23 +32,6 @@ module RedCloth
         
       end
       
-      describe "mtext rule" do
-        before(:each) { @parser.root = :mtext }
-        
-        it "should parse mtext" do
-          ["some text", "text", "a little text.", "some\ntext"].each do |text|
-            lambda { parse(text) }.should_not raise_error
-          end
-        end
-        
-        it "should not parse non-mtext" do
-          ["some text ", " text", "text\n", "text\n\n", "some\n\ntext"].each do |text|
-            lambda { parse(text) }.should raise_error(RedCloth::Parser::SyntaxError)
-          end
-        end
-
-      end
-      
     end
   end
 end

@@ -18,22 +18,8 @@ module RedCloth
       rule inline_element
         bold /
         strong /
-        # em /
         word
       end
-      
-      # 
-      # rule em
-      #   '_' contents:inline '_' {
-      #     def build(filter)
-      #       Ast::InlineElement.new(
-      #         {:type => :em},
-      #         # contents.elements.map {|e| e.elements[1].build(filter) }
-      #         contents.all_inline_elements.map {|e| e.build(filter) }
-      #       )
-      #     end
-      #   }
-      # end
       
     end
   end
