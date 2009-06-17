@@ -17,7 +17,7 @@ module RedCloth
       end
       
       it "should accept visitor" do
-        @visitor.should_receive(:visit_block_element).with(@element)
+        @visitor.should_receive(:block_element).with(@element)
         @textile_doc.accept(@visitor)
       end
       

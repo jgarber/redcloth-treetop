@@ -18,15 +18,15 @@ module RedCloth
         Builder::XmlMarkup.new(:target => io, :indent => 0)
       end
       
-      def visit_block_element(element)
-        visit_paragraph(element)
+      def block_element(element)
+        paragraph(element)
       end
       
-      def visit_paragraph(element)
+      def paragraph(element)
         @builder.p(element.inline_contents)
       end
       
-      def visit_strong(element)
+      def strong(element)
         @builder.strong(super)
       end
       

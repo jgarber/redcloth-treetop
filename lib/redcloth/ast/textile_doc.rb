@@ -13,7 +13,7 @@ module RedCloth
       
       def accept(visitor)
         @block_elements.each do |block_element|
-          visitor.visit_block_element(block_element)
+          visitor.block_element(block_element)
         end
       end
       

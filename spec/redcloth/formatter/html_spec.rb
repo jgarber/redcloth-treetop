@@ -10,26 +10,26 @@ module RedCloth
         @formatter = Html.new(@messenger)
       end
       
-      describe "#visit_block_element" do
+      describe "#block_element" do
         it "should output a simple paragraph" do
           @block_element = mock("block element")
-          @formatter.should_receive(:visit_paragraph)
-          @formatter.visit_block_element(@block_element)
+          @formatter.should_receive(:paragraph)
+          @formatter.block_element(@block_element)
         end
       end
 
-      describe "#visit_paragraph" do
+      describe "#paragraph" do
         it "should output a simple paragraph" do
           @paragraph = Ast::Paragraph.new({}, "test") # FIXME: this should probably be a mock object
-          @formatter.visit_paragraph(@paragraph)
+          @formatter.paragraph(@paragraph)
           @messenger.string.should == "<p>test</p>"
         end
       end
       
-      describe "#visit_strong" do
+      describe "#strong" do
         it "should output a strong phrase" do
           @strong = Ast::InlineElement.new({:type => 'strong'}, ['Strong phrase.'])
-          @formatter.visit_strong(@strong)
+          @formatter.strong(@strong)
           @messenger.string.should == "<strong>Strong phrase.</strong>"
         end
       end
