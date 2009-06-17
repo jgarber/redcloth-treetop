@@ -1,5 +1,4 @@
 require 'redcloth/ast/textile_doc'
-require 'redcloth/ast/paragraph'
 require 'redcloth/ast/list'
 require 'redcloth/ast/list_item'
 require 'redcloth/ast/inline'

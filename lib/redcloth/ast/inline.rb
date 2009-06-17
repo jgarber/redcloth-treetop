@@ -11,17 +11,21 @@ module RedCloth
       end
       
       def contents_to_sexp
-        @contained_elements.inject([]) do |a, e|
-          if e.is_a?(String)
-            if a.last.is_a?(String)
-              a.last << e
+        if @contained_elements.is_a?(Inline)
+          @contained_elements.to_sexp
+        else
+          @contained_elements.inject([]) do |a, e|
+            if e.is_a?(String)
+              if a.last.is_a?(String)
+                a.last << e
+              else
+                a << e unless e.blank?
+              end
             else
-              a << e unless e.blank?
+              a << e.to_sexp
             end
-          else
-            a << e.to_sexp
+            a
           end
-          a
         end
       end
       

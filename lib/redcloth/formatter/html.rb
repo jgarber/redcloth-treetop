@@ -19,11 +19,11 @@ module RedCloth
       end
       
       def block_element(element)
-        paragraph(element)
+        p(element)
       end
       
-      def paragraph(element)
-        @builder.p(element.inline_contents)
+      def p(element)
+        @builder.p(element.contained_elements)
       end
       
       def strong(element)

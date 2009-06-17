@@ -14,23 +14,23 @@ module RedCloth
   
       it 'should parse an implicit paragraph' do
         parse("This is my paragraph\n\n").to_sexp.should ==
-          [[:paragraph, {}, ["This is my paragraph"]]]
+          [[:p, {}, ["This is my paragraph"]]]
       end
   
       it 'should parse an explicit paragraph' do
         parse("p. This is my paragraph\n\n").to_sexp.should ==
-          [[:paragraph, {}, ["This is my paragraph"]]]
+          [[:p, {}, ["This is my paragraph"]]]
       end
   
       it 'should parse an explicit paragraph without double newline after' do
         parse("p. This is my paragraph").to_sexp.should ==
-          [[:paragraph, {}, ["This is my paragraph"]]]
+          [[:p, {}, ["This is my paragraph"]]]
       end
       
       it "should parse two paragraphs" do
         parse("One paragraph.\n\nTwo paragraphs.").to_sexp.should ==
-          [[:paragraph, {}, ["One paragraph."]],
-           [:paragraph, {}, ["Two paragraphs."]]]
+          [[:p, {}, ["One paragraph."]],
+           [:p, {}, ["Two paragraphs."]]]
       end
         
       it "should parse a basic list followed by double newline" do
@@ -46,13 +46,13 @@ module RedCloth
           [ [:list, {}, [
               [:list_item, {}, ["one"]],
               [:list_item, {}, ["two"]]]],
-            [:paragraph, {}, ["A paragraph."]]
+            [:p, {}, ["A paragraph."]]
           ]
       end
       
       it "should parse a paragraph followed by a list" do
         parse("A paragraph.\n\n# one\n# two").to_sexp.should ==
-          [ [:paragraph, {}, ["A paragraph."]],
+          [ [:p, {}, ["A paragraph."]],
             [:list, {}, [
               [:list_item, {}, ["one"]],
               [:list_item, {}, ["two"]]]]
@@ -63,7 +63,7 @@ module RedCloth
 
         it "should parse a paragraph with inline strong" do
           parse("p. This is *my* paragraph").to_sexp.should ==
-            [[:paragraph, {}, [
+            [[:p, {}, [
               "This is ",
               [:strong, {}, ["my"]],
               " paragraph"]]]

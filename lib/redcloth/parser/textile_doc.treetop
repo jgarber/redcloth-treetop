@@ -28,7 +28,7 @@ module RedCloth
       rule paragraph
         ("p." spaces)? inline {
           def build(filter)
-            Ast::Paragraph.new({}, inline.build(filter))
+            Ast::Element.new({:type => :p}, inline.build(filter))
           end
         }
       end

@@ -13,15 +13,15 @@ module RedCloth
       describe "#block_element" do
         it "should output a simple paragraph" do
           @block_element = mock("block element")
-          @formatter.should_receive(:paragraph)
+          @formatter.should_receive(:p)
           @formatter.block_element(@block_element)
         end
       end
 
-      describe "#paragraph" do
+      describe "#p" do
         it "should output a simple paragraph" do
-          @paragraph = Ast::Paragraph.new({}, ["test"])
-          @formatter.paragraph(@paragraph)
+          @p = Ast::Element.new({:type => :p}, ["test"])
+          @formatter.p(@p)
           @messenger.string.should == "<p>test</p>"
         end
       end
