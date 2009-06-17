@@ -9,7 +9,7 @@ module RedCloth
         rule bold
           '**' contents:inline end_bold {
             def build(filter)
-              Ast::InlineElement.new(
+              Ast::Element.new(
                 {:type => :bold},
                 contents.all_inline_elements.map {|e| e.build(filter) }
               )

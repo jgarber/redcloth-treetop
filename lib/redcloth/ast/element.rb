@@ -1,11 +1,11 @@
 module RedCloth
   module Ast
-    class InlineElement < Inline
-      attr_reader :inline_elements
+    class Element < Inline
+      attr_reader :contained_elements
       
-      def initialize(opts={}, inline_elements=nil)
+      def initialize(opts={}, contained_elements=nil)
         @opts = opts
-        @inline_elements = inline_elements
+        @contained_elements = contained_elements
       end
       
       def to_sexp

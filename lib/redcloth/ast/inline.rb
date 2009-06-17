@@ -2,8 +2,8 @@ module RedCloth
   module Ast
     class Inline
       
-      def initialize(inline_elements)
-        @inline_elements = inline_elements
+      def initialize(contained_elements)
+        @contained_elements = contained_elements
       end
       
       def to_sexp
@@ -11,7 +11,7 @@ module RedCloth
       end
       
       def contents_to_sexp
-        @inline_elements.inject([]) do |a, e|
+        @contained_elements.inject([]) do |a, e|
           if e.is_a?(String)
             if a.last.is_a?(String)
               a.last << e

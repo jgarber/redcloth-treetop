@@ -9,7 +9,7 @@ module RedCloth
         rule strong
           '*' !'*' contents:inline end_strong {
             def build(filter)
-              Ast::InlineElement.new(
+              Ast::Element.new(
                 {:type => :strong},
                 contents.all_inline_elements.map {|e| e.build(filter) }
               )

@@ -20,7 +20,7 @@ module RedCloth
 
       describe "#paragraph" do
         it "should output a simple paragraph" do
-          @paragraph = Ast::Paragraph.new({}, "test") # FIXME: this should probably be a mock object
+          @paragraph = Ast::Paragraph.new({}, ["test"])
           @formatter.paragraph(@paragraph)
           @messenger.string.should == "<p>test</p>"
         end
@@ -28,7 +28,7 @@ module RedCloth
       
       describe "#strong" do
         it "should output a strong phrase" do
-          @strong = Ast::InlineElement.new({:type => 'strong'}, ['Strong phrase.'])
+          @strong = Ast::Element.new({:type => 'strong'}, ['Strong phrase.'])
           @formatter.strong(@strong)
           @messenger.string.should == "<strong>Strong phrase.</strong>"
         end
