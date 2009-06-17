@@ -7,10 +7,10 @@ module RedCloth
       end
       
       def to_sexp
-        contents
+        contents_to_sexp
       end
       
-      def contents
+      def contents_to_sexp
         @inline_elements.inject([]) do |a, e|
           if e.is_a?(String)
             if a.last.is_a?(String)

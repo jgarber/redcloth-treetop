@@ -26,6 +26,14 @@ module RedCloth
         end
       end
       
+      describe "#visit_strong" do
+        it "should output a strong phrase" do
+          @strong = Ast::InlineElement.new({:type => 'strong'}, ['Strong phrase.'])
+          @formatter.visit_strong(@strong)
+          @messenger.string.should == "<strong>Strong phrase.</strong>"
+        end
+      end
+      
     end
   end
 end

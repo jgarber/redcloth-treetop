@@ -26,6 +26,10 @@ module RedCloth
         @builder.p(element.inline_contents)
       end
       
+      def visit_strong(element)
+        @builder.strong(super)
+      end
+      
     end
   end
 end
