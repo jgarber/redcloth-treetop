@@ -23,7 +23,7 @@ module RedCloth
       end
       
       def p(element)
-        @builder.p(element.contained_elements)
+        @builder.p(super)
       end
       
       def strong(element)
