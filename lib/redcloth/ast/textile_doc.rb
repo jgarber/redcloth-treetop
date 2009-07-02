@@ -17,6 +17,7 @@ module RedCloth
         end
       end
       
+      # to_html, to_latex, etc. are added to the TextileDoc class in their respective formatter files
     end
   end
 end

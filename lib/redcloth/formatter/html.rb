@@ -65,7 +65,7 @@ module RedCloth
   module Ast
     class TextileDoc
       def to_html
-        RedCloth::Formatter::Html.new(self)
+        RedCloth::Formatter::Html.new(self).builder.target!
       end
     end
   end
