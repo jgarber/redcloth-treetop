@@ -7,10 +7,11 @@ module RedCloth
         include CommonInline
         
         rule strong
-          '*' !'*' contents:inline end_strong {
+          '*' !'*' strong_attributes:attributes? contents:inline end_strong {
             def build(filter)
+              attributes = strong_attributes.empty? ? {} : strong_attributes.to_opts
               Ast::Element.new(
-                {:type => :strong},
+                attributes.merge(:type => :strong),
                 contents.build(filter)
               )
             end

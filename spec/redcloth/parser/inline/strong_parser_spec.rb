@@ -18,6 +18,11 @@ module RedCloth
             [:strong, {}, ["don't you dare!"]]
         end
         
+        it "should parse class/id attributes on strong phrase" do
+          parse("*(myclass#myid)don't you dare!*").to_sexp.should ==
+            [:strong, {:class => "myclass", :id => "myid"}, ["don't you dare!"]]
+        end
+        
         it "should allow asterisks as words in a strong phrase" do
           parse("*2 * 7*").to_sexp.should ==
             [:strong, {}, ["2 * 7"]]
