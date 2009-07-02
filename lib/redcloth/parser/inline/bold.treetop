@@ -7,10 +7,11 @@ module RedCloth
         include CommonInline
         
         rule bold
-          '**' contents:inline end_bold {
+          '**' strong_attributes:attributes? contents:inline end_bold {
             def build(filter)
+              attributes = strong_attributes.empty? ? {} : strong_attributes.to_opts
               Ast::Element.new(
-                {:type => :bold},
+                attributes.merge(:type => :bold),
                 contents.build(filter)
               )
             end

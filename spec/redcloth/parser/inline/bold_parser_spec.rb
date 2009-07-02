@@ -18,6 +18,11 @@ module RedCloth
             [:bold, {}, ["complete all required fields"]]
         end
         
+        it "should parse class/id attributes on bold phrase" do
+          parse("**(myclass#myid)complete all required fields**").to_sexp.should ==
+            [:bold, {:class => "myclass", :id => "myid"}, ["complete all required fields"]]
+        end
+        
         it "should allow double asterisks as words in a bold phrase" do
           parse("**2 ** 7**").to_sexp.should ==
             [:bold, {}, ["2 ** 7"]]
