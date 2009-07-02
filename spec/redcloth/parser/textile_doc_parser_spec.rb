@@ -32,6 +32,18 @@ module RedCloth
           [[:p, {}, ["One paragraph."]],
            [:p, {}, ["Two paragraphs."]]]
       end
+
+      it "should parse two paragraphs with spaces on the separating line" do
+        parse("One paragraph.\n  \nTwo paragraphs.").to_sexp.should ==
+          [[:p, {}, ["One paragraph."]],
+           [:p, {}, ["Two paragraphs."]]]
+      end
+        
+      it "should parse two paragraphs with tabs on the separating line" do
+        parse("One paragraph.\n\t\t\nTwo paragraphs.").to_sexp.should ==
+          [[:p, {}, ["One paragraph."]],
+           [:p, {}, ["Two paragraphs."]]]
+      end
         
       it "should parse a basic list followed by double newline" do
         parse("# one\n# two\n\n").to_sexp.should ==

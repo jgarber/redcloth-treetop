@@ -10,7 +10,7 @@ module RedCloth
       end
 
       rule block_end
-        double_newline / !(.)
+        newline [ \t]* newline / !(.)
       end
 
       rule newline
