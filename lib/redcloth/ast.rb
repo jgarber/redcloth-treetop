@@ -18,3 +18,9 @@ module RedCloth
   module Ast
   end
 end
+
+class String
+  def to_sexp
+    self
+  end
+end

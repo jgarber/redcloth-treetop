@@ -10,9 +10,18 @@ module RedCloth
         punct
         more_elements:(!li_end inline_spaces inline_element punct)* {
           def build(filter)
-            Ast::Inline.new(
-              all_inline_elements.map {|e| e.build(filter) }
-            )
+            all_inline_elements.map {|e| e.build(filter) }.inject([]) do |a, e|
+              if e.is_a?(String)
+                if a.last.is_a?(String)
+                  a.last << e
+                else
+                  a << e unless e.blank?
+                end
+              else
+                a << e
+              end
+              a
+            end
           end
           def all_inline_elements
             [element_1, punct] + more_elements.elements.map {|e| e.elements }.flatten.reject do |e|

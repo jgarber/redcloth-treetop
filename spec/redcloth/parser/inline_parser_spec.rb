@@ -12,42 +12,46 @@ module RedCloth
         @parser.parse_or_fail(string)
       end
       
+      def parsed_sexp(string)
+        parse(string).map {|e| e.to_sexp}
+      end
+      
       ### plain text ###
       
       it "should parse a plain-text phrase" do
-        parse("Just plain text.").to_sexp.should ==
+        parsed_sexp("Just plain text.").should ==
           ["Just plain text."]
       end
       
       it "should parse a phrase with asterisks that is not a strong phrase" do
-        parse("yes * we * can").to_sexp.should ==
+        parsed_sexp("yes * we * can").should ==
          ["yes * we * can"]
       end
 
       it "should parse a phrase that is not a strong because it has space at the end" do
-        parse("yeah *that's * it!").to_sexp.should ==
+        parsed_sexp("yeah *that's * it!").should ==
          ["yeah *that's * it!"]
       end
       
       ### strong ###
       
       it "should parse a strong phrase" do
-        parse("*strong phrase*").to_sexp.should ==
+        parsed_sexp("*strong phrase*").should ==
           [[:strong, {}, ["strong phrase"]]]
       end
       
       it "should parse a strong phrase surrounded by plain text" do
-        parse("plain *strong phrase* plain").to_sexp.should ==
+        parsed_sexp("plain *strong phrase* plain").should ==
           ["plain ", [:strong, {}, ["strong phrase"]], " plain"]
       end
       
       it "should allow a strong phrase at the end of a sentence before punctuation" do
-        parse("Are you *veg*an*?").to_sexp.should ==
+        parsed_sexp("Are you *veg*an*?").should ==
           ["Are you ", [:strong, {}, ["veg*an"]], "?"]
       end
       
       it "should parse a bold phrase inside a strong phrase" do
-        parse("*this is **bold** see*").to_sexp.should ==
+        parsed_sexp("*this is **bold** see*").should ==
           [[:strong, {}, [
             "this is ",
             [:bold, {}, ["bold"]],
@@ -56,7 +60,7 @@ module RedCloth
       
       it "should parse an emphasized phrase inside a strong phrase" do
         pending
-        parse("*_em in strong_*").to_sexp.should ==
+        parsed_sexp("*_em in strong_*").should ==
           [[:strong, {}, [
             [:em, {}, ["em in strong"]]]]]
       end
@@ -65,13 +69,13 @@ module RedCloth
       
       it "should parse an emphasized phrase" do
         pending
-        parse("_emphasized_").to_sexp.should ==
+        parsed_sexp("_emphasized_").should ==
           [[:em, {}, ["emphasized"]]]
       end
       
       it "should parse a strong phrase inside an emphasized phrase" do
         pending
-        parse("_*strong in em*_").to_sexp.should ==
+        parsed_sexp("_*strong in em*_").should ==
           [[:em, {}, [
             [:strong, {}, ["strong in em"]]]]]
       end
@@ -79,22 +83,22 @@ module RedCloth
       ### bold ###
       
       it "should parse a bold phrase" do
-        parse("**bold phrase**").to_sexp.should ==
+        parsed_sexp("**bold phrase**").should ==
           [[:bold, {}, ["bold phrase"]]]
       end
       
       it "should parse a bold phrase surrounded by plain text" do
-        parse("plain **bold phrase** plain").to_sexp.should ==
+        parsed_sexp("plain **bold phrase** plain").should ==
           ["plain ", [:bold, {}, ["bold phrase"]], " plain"]
       end
       
       it "should allow a bold phrase at the end of a sentence before punctuation" do
-        parse("Are you **veg*an**?").to_sexp.should ==
+        parsed_sexp("Are you **veg*an**?").should ==
           ["Are you ", [:bold, {}, ["veg*an"]], "?"]
       end
       
       it "should parse a strong phrase inside a bold phrase" do
-        parse("**this is *strong* see**").to_sexp.should ==
+        parsed_sexp("**this is *strong* see**").should ==
           [[:bold, {}, [
             "this is ",
             [:strong, {}, ["strong"]],
@@ -103,7 +107,7 @@ module RedCloth
       
       it "should parse an emphasized phrase inside a bold phrase" do
         pending
-        parse("**_em in bold_**").to_sexp.should ==
+        parsed_sexp("**_em in bold_**").should ==
           [[:bold, {}, [
             [:em, {}, ["em in bold"]]]]]
       end

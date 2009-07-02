@@ -1,6 +1,6 @@
 module RedCloth
   module Ast
-    class Element < Inline
+    class Element
       attr_reader :contained_elements
       attr_reader :type
       
@@ -11,7 +11,7 @@ module RedCloth
       end
       
       def to_sexp
-        [type, @opts, contents_to_sexp]
+        [type, @opts, contained_elements.map {|e| e.to_sexp }]
       end
       
       def accept(visitor)

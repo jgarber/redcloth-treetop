@@ -11,7 +11,7 @@ module RedCloth
             def build(filter)
               Ast::Element.new(
                 {:type => :strong},
-                contents.all_inline_elements.map {|e| e.build(filter) }
+                contents.build(filter)
               )
             end
           }
