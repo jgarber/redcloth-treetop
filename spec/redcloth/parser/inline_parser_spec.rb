@@ -23,14 +23,19 @@ module RedCloth
           ["Just plain text."]
       end
       
+      it "should parse two basic sentences" do
+        parsed_sexp("One sentence. Two.").should ==
+          ["One sentence. Two."]
+      end
+      
       it "should parse a phrase with asterisks that is not a strong phrase" do
         parsed_sexp("yes * we * can").should ==
-         ["yes * we * can"]
+          ["yes * we * can"]
       end
 
       it "should parse a phrase that is not a strong because it has space at the end" do
         parsed_sexp("yeah *that's * it!").should ==
-         ["yeah *that's * it!"]
+          ["yeah *that's * it!"]
       end
       
       ### strong ###
