@@ -48,7 +48,7 @@ module RedCloth
         list_attributes:attributes?
         nest:"#"+
         list_item_attributes:attributes?
-        [\s]
+        spaces
       end
 
       rule li

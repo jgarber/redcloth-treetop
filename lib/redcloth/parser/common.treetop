@@ -6,7 +6,7 @@ module RedCloth
       include Attributes
       
       rule spaces
-        [\s]+
+        " "+
       end
 
       rule block_end
@@ -22,11 +22,11 @@ module RedCloth
       end
       
       rule chars
-        [^\s\r\n\t]+
+        [\S]+
       end
       
       rule mspace
-        !double_newline ( [\s\t\r\n] )+
+        !double_newline ( [\s] )+
       end
       
       rule li_end

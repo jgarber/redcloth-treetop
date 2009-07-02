@@ -15,7 +15,7 @@ module RedCloth
         end
     
         rule css_classes
-          css_class ([\s] css_class)*
+          css_class (" " css_class)*
         end
     
         rule css_class

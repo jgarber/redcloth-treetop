@@ -56,11 +56,11 @@ module RedCloth
       end
       
       rule mchar
-        [^\s\r\n\t]
+        [\S]
       end
       
       rule inline_spaces
-        [\s\t]+ {
+        [ \t]+ {
           def build(filter)
             text_value
           end
