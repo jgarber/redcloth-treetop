@@ -27,12 +27,23 @@ if require_spec
     unable_to_load
   end
 
-  desc "Run the RedCloth specs"
+  desc "Run the RedCloth Treetop specs"
   Spec::Rake::SpecTask.new do |t|
     t.spec_opts = ['--options', "spec/spec.opts"]
-    t.spec_files = FileList['spec/**/*_spec.rb']
+    t.spec_files = FileList['spec/redcloth/**/*_spec.rb']
     t.rcov = ENV['RCOV']
     t.rcov_opts = %w{--exclude osx\/objc,gems\/,spec\/}
     t.verbose = true
+  end
+
+  namespace :spec do
+    desc "Run the specs under spec/integration"
+    Spec::Rake::SpecTask.new("integration") do |t|
+      t.spec_opts = ['--options', "spec/spec.opts"]
+      t.spec_files = FileList['spec/integration/**/*_spec.rb']
+      t.rcov = ENV['RCOV']
+      t.rcov_opts = %w{--exclude osx\/objc,gems\/,spec\/}
+      t.verbose = true
+    end
   end
 end
