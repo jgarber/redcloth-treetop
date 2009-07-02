@@ -6,8 +6,7 @@ module RedCloth
   module Formatter
     describe Html do
       before(:each) do
-        @messenger = StringIO.new 
-        @formatter = Html.new(@messenger)
+        @formatter = Html.new("")
       end
       
       describe "#block_element" do
@@ -21,23 +20,26 @@ module RedCloth
       describe "#p" do
         it "should format a simple paragraph" do
           @p = Ast::Element.new({:type => :p}, ["test"])
-          @formatter.p(@p)
-          @messenger.string.should == "<p>test</p>"
+          @formatter.p(@p).should == "<p>test</p>"
+        end
+        
+        it "should format a paragraph composed of an inline element" do
+          @strong = Ast::Element.new({:type => :strong}, ["Do not drink the water!"])
+          @p = Ast::Element.new({:type => :p}, [@strong])
+          @formatter.p(@p).should == "<p><strong>Do not drink the water!</strong></p>"
         end
         
         it "should format a paragraph containing inline elements" do
-          @strong = Ast::Element.new({:type => :strong}, ["Do not drink the water!"])
-          @p = Ast::Element.new({:type => :p}, [@strong])
-          @formatter.p(@p)
-          @messenger.string.should == "<p><strong>Do not drink the water!</strong></p>"
+          @strong = Ast::Element.new({:type => :strong}, ["do not drink the water"])
+          @p = Ast::Element.new({:type => :p}, ["Please ", @strong, "!"])
+          @formatter.p(@p).should == "<p>Please <strong>do not drink the water</strong>!</p>"
         end
       end
       
       describe "#strong" do
         it "should format a strong phrase" do
           @strong = Ast::Element.new({:type => 'strong'}, ['Strong phrase.'])
-          @formatter.strong(@strong)
-          @messenger.string.should == "<strong>Strong phrase.</strong>"
+          @formatter.strong(@strong).should == "<strong>Strong phrase.</strong>"
         end
       end
       

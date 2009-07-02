@@ -23,12 +23,29 @@ module RedCloth
       end
       
       def p(element)
-        @builder.p(super)
+        @builder.p do |p|
+          accept_contents(element)
+        end
       end
       
       def strong(element)
-        @builder.strong(super)
+        @builder.strong do |p|
+          accept_contents(element)
+        end
       end
+      
+      private
+      
+      def accept_contents(element)
+        element.contained_elements.each do |e|
+          if e.is_a?(String)
+            @builder.text! e
+          else
+            e.accept(self)
+          end
+        end
+      end
+      
       
     end
   end
