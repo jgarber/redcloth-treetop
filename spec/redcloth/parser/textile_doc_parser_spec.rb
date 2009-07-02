@@ -3,6 +3,10 @@ require 'redcloth/parser'
 
 module RedCloth
   module Parser
+    # Examples in this file are general block formatting or
+    # interactions between block elements. Block element
+    # examples can be found in the spec/block directory.
+    #
     describe TextileDocParser do
       before :each do
         @parser = TextileDocParser.new
@@ -11,7 +15,7 @@ module RedCloth
       def parse(string)
         @parser.parse_or_fail(string)
       end
-  
+      
       it 'should parse an implicit paragraph' do
         parse("This is my paragraph\n\n").to_sexp.should ==
           [[:p, {}, ["This is my paragraph"]]]
@@ -27,19 +31,19 @@ module RedCloth
           [[:p, {}, ["This is my paragraph"]]]
       end
       
-      it "should parse two paragraphs" do
+      it "should parse two block elements separated by two newlines" do
         parse("One paragraph.\n\nTwo paragraphs.").to_sexp.should ==
           [[:p, {}, ["One paragraph."]],
            [:p, {}, ["Two paragraphs."]]]
       end
 
-      it "should parse two paragraphs with spaces on the separating line" do
+      it "should parse two block elements with spaces on the separating line" do
         parse("One paragraph.\n  \nTwo paragraphs.").to_sexp.should ==
           [[:p, {}, ["One paragraph."]],
            [:p, {}, ["Two paragraphs."]]]
       end
         
-      it "should parse two paragraphs with tabs on the separating line" do
+      it "should parse two block elements with tabs on the separating line" do
         parse("One paragraph.\n\t\t\nTwo paragraphs.").to_sexp.should ==
           [[:p, {}, ["One paragraph."]],
            [:p, {}, ["Two paragraphs."]]]
