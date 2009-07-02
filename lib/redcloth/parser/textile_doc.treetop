@@ -26,10 +26,18 @@ module RedCloth
       end
 
       rule paragraph
-        explicit_paragraph_start:("p" paragraph_attributes:attributes? "." spaces)? inline {
+        p_start:explicit_paragraph_start? inline {
           def build(filter)
-            attributes = (explicit_paragraph_start.empty? || explicit_paragraph_start.paragraph_attributes.empty?) ? {} : explicit_paragraph_start.paragraph_attributes.to_opts
+            attributes = p_start.empty? ? {} : p_start.to_opts
             Ast::Element.new(attributes.merge(:type => :p), inline.build(filter))
+          end
+        }
+      end
+      
+      rule explicit_paragraph_start
+        "p" paragraph_attributes:attributes? "." spaces {
+          def to_opts
+            paragraph_attributes.empty? ? {} : paragraph_attributes.to_opts
           end
         }
       end
