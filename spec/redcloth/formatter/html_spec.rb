@@ -6,7 +6,7 @@ module RedCloth
   module Formatter
     describe Html do
       before(:each) do
-        @formatter = Html.new("")
+        @formatter = Html.new
       end
       
       describe "#block_element" do
@@ -40,6 +40,13 @@ module RedCloth
         it "should format a strong phrase" do
           @strong = Ast::Element.new({:type => 'strong'}, ['Strong phrase.'])
           @formatter.strong(@strong).should == "<strong>Strong phrase.</strong>"
+        end
+      end
+      
+      describe "#bold" do
+        it "should format a bold phrase" do
+          @bold = Ast::Element.new({:type => 'bold'}, ['Bold phrase.'])
+          @formatter.b(@bold).should == "<b>Bold phrase.</b>"
         end
       end
       

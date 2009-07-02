@@ -61,7 +61,7 @@ module RedCloth
       
       describe "InlineParser integration" do
 
-        it "should parse a paragraph with inline strong" do
+        it "should parse a paragraph containing inline elements" do
           parse("p. This is *my* paragraph").to_sexp.should ==
             [[:p, {}, [
               "This is ",

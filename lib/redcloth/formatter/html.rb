@@ -9,27 +9,38 @@ module RedCloth
   module Formatter
     class Html < Ast::Visitor
       
-      def initialize(io, options={})
+      def initialize(textile_doc=nil, options={})
         @options = options
-        @builder = create_builder(io)
+        format(textile_doc) if textile_doc
       end
       
-      def create_builder(io)
-        Builder::XmlMarkup.new(:target => io, :indent => 0)
+      def format(textile_doc)
+        textile_doc.accept(self)
+      end
+      
+      def builder
+        @builder ||= Builder::XmlMarkup.new(:indent => 0)
       end
       
       def block_element(element)
         p(element)
       end
       
+      # FIXME: Yeah, these aren't DRY, but you know what they say about premature optimization
       def p(element)
-        @builder.p do |p|
+        builder.p do
           accept_contents(element)
         end
       end
       
       def strong(element)
-        @builder.strong do |p|
+        builder.strong do
+          accept_contents(element)
+        end
+      end
+      
+      def b(element)
+        builder.b do
           accept_contents(element)
         end
       end
@@ -39,14 +50,23 @@ module RedCloth
       def accept_contents(element)
         element.contained_elements.each do |e|
           if e.is_a?(String)
-            @builder.text! e
+            builder.text! e
           else
             e.accept(self)
           end
         end
       end
       
-      
+    end
+  end
+end
+
+module RedCloth
+  module Ast
+    class TextileDoc
+      def to_html
+        RedCloth::Formatter::Html.new(self)
+      end
     end
   end
 end
