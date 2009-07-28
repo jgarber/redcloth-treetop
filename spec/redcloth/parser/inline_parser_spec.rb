@@ -64,7 +64,6 @@ module RedCloth
       end
       
       it "should parse an emphasized phrase inside a strong phrase" do
-        pending
         parsed_sexp("*_em in strong_*").should ==
           [[:strong, {}, [
             [:em, {}, ["em in strong"]]]]]
@@ -73,16 +72,25 @@ module RedCloth
       ### em ###
       
       it "should parse an emphasized phrase" do
-        pending
         parsed_sexp("_emphasized_").should ==
           [[:em, {}, ["emphasized"]]]
       end
       
+      it "should allow an emphasized phrase at the end of a sentence before punctuation" do
+        parsed_sexp("Are you _sure_?").should ==
+          ["Are you ", [:em, {}, ["sure"]], "?"]
+      end
+      
       it "should parse a strong phrase inside an emphasized phrase" do
-        pending
         parsed_sexp("_*strong in em*_").should ==
           [[:em, {}, [
             [:strong, {}, ["strong in em"]]]]]
+      end
+      
+      it "should parse a bold phrase inside an emphasized phrase" do
+        parsed_sexp("_**bold in em**_").should ==
+          [[:em, {}, [
+            [:bold, {}, ["bold in em"]]]]]
       end
       
       ### bold ###
@@ -111,7 +119,6 @@ module RedCloth
       end
       
       it "should parse an emphasized phrase inside a bold phrase" do
-        pending
         parsed_sexp("**_em in bold_**").should ==
           [[:bold, {}, [
             [:em, {}, ["em in bold"]]]]]

@@ -1,0 +1,24 @@
+require File.dirname(__FILE__) + "/common_inline"
+
+module RedCloth
+  module Parser
+    module Inline
+      grammar Em
+        include CommonInline
+        
+        rule em
+          '_' em_attributes:attributes? contents:inline end_em {
+            def build(filter)
+              attributes = em_attributes.empty? ? {} : em_attributes.to_opts
+              Ast::Element.new(
+                attributes.merge(:type => :em),
+                contents.build(filter)
+              )
+            end
+          }
+        end
+        
+      end
+    end
+  end
+end

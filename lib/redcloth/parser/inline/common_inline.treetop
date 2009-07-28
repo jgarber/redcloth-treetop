@@ -37,9 +37,10 @@ module RedCloth
       
       rule word
         (
-          ( !(end_bold / end_strong) mchar )+ /
+          ( !(end_bold / end_strong / end_em) mchar )+ /
           '**' /
-          '*'
+          '*' /
+          '_'
         ) {
           def build(filter)
             text_value
@@ -73,6 +74,10 @@ module RedCloth
       
       rule end_bold
         '**' !(![^a-zA-Z0-9*] .)
+      end
+      
+      rule end_em
+        '_' !(![^a-zA-Z0-9_] .)
       end
       
     end
