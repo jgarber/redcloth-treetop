@@ -3,6 +3,7 @@ require File.dirname(__FILE__) + "/inline/common_inline"
 require File.dirname(__FILE__) + "/inline/strong"
 require File.dirname(__FILE__) + "/inline/bold"
 require File.dirname(__FILE__) + "/inline/em"
+require File.dirname(__FILE__) + "/inline/italic"
 
 module RedCloth
   module Parser
@@ -12,6 +13,7 @@ module RedCloth
       include Strong
       include Bold
       include Em
+      include Italic
       
       rule inline
         super
@@ -20,6 +22,7 @@ module RedCloth
       rule inline_element
         bold /
         strong /
+        italic /
         em /
         word
       end

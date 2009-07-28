@@ -3,15 +3,15 @@ require File.dirname(__FILE__) + "/common_inline"
 module RedCloth
   module Parser
     module Inline
-      grammar Bold
+      grammar Italic
         include CommonInline
         
-        rule bold
-          '**' bold_attributes:attributes? contents:inline end_bold {
+        rule italic
+          '__' italic_attributes:attributes? contents:inline end_italics {
             def build(filter)
-              attributes = bold_attributes.empty? ? {} : bold_attributes.to_opts
+              attributes = italic_attributes.empty? ? {} : italic_attributes.to_opts
               Ast::Element.new(
-                attributes.merge(:type => :bold),
+                attributes.merge(:type => :italic),
                 contents.build(filter)
               )
             end

@@ -124,6 +124,35 @@ module RedCloth
             [:em, {}, ["em in bold"]]]]]
       end
       
+      ### italics ###
+      
+      it "should parse an italic phrase" do
+        parsed_sexp("__italic phrase__").should ==
+          [[:italic, {}, ["italic phrase"]]]
+      end
+      
+      it "should parse an emphasized phrase inside an italic phrase" do
+        parsed_sexp("__this is _emphasized_ see__").should ==
+          [[:italic, {}, [
+            "this is ",
+            [:em, {}, ["emphasized"]],
+            " see"]]]
+      end
+      
+      it "should parse a strong phrase inside an italic phrase" do
+        parsed_sexp("__*strong in italic*__").should ==
+          [[:italic, {}, [
+            [:strong, {}, ["strong in italic"]]]]]
+      end
+      
+      it "should parese a bold phrase inside an italic phrase" do
+        parsed_sexp("__this is **bold** see__").should ==
+          [[:italic, {}, [
+            "this is ",
+            [:bold, {}, ["bold"]],
+            " see"]]]
+      end
+      
       
     end
   end
