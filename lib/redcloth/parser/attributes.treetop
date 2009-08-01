@@ -18,6 +18,14 @@ module RedCloth
         }
       end
       
+      rule title
+        "(" inner_text:(!")" .)+ ")" {
+          def text
+            inner_text.text_value
+          end
+        }
+      end
+      
     end
   end
 end

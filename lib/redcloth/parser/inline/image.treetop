@@ -1,0 +1,35 @@
+require File.dirname(__FILE__) + "/../attributes"
+
+module RedCloth
+  module Parser
+    module Inline
+      grammar Image
+        include Attributes
+        
+        rule image
+          "!" src:(![!(\s] .)+ alt_text:title? "!" link:image_link_suffix? {
+            def build(filter)
+              attributes = {:src => src.text_value, :type => :image}
+              attributes[:alt] = alt_text.text unless alt_text.empty?
+              # attributes = image_attributes.empty? ? {} : image_attributes.to_opts
+              if link.empty?
+                Ast::Element.new(attributes)
+              else
+                Ast::Element.new({:type => :link, :href => link.href}, [Ast::Element.new(attributes)])
+              end
+            end
+          }
+        end
+        
+        rule image_link_suffix
+          ":" url:(![\s] .)+ {
+            def href
+              url.text_value
+            end
+          }
+        end
+        
+      end
+    end
+  end
+end
