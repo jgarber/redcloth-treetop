@@ -1,0 +1,239 @@
+module RedCloth
+  module Parser
+    module Attributes
+      grammar Uri
+        # Ported from URI in Ruby 1.9.1
+        # References:
+        #   RFC 2396 (URI Generic Syntax)
+        #   RFC 2732 (IPv6 Literal Addresses in URL's)
+        #   RFC 2373 (IPv6 Addressing Architecture)
+        
+        # URI-reference = [ absoluteURI | relativeURI ] [ "#" fragment ]
+        rule uri
+          (abs_uri / rel_uri)? ("#" fragment)?
+        end
+        
+        # absoluteURI   = scheme ":" ( hier_part | opaque_part )
+        rule abs_uri
+          scheme ":" (hier_part / opaque_part)
+        end
+        
+        # relativeURI   = ( net_path | abs_path | rel_path ) [ "?" query ]
+        rule rel_uri
+          (net_path / abs_path / rel_path) ("?" query)?
+        end
+        
+        # pchar         = unreserved | escaped |
+        #                 ":" | "@" | "&" | "=" | "+" | "$" | ","
+        rule pchar
+          unreserved / escaped / [:@&=+$,]
+        end
+        
+        # param         = *pchar
+        rule param
+          pchar*
+        end
+        
+        # segment       = *pchar *( ";" param )
+        rule segment
+          pchar* (";" param)*
+        end
+        
+        # path_segments = segment *( "/" segment )
+        rule path_segments
+          segment ("/" segment)*
+        end
+        
+        # server        = [ [ userinfo "@" ] hostport ]
+        rule server
+          (userinfo "@")? hostport
+        end
+        
+        # reg_name      = 1*( unreserved | escaped | "$" | "," |
+        #                     ";" | ":" | "@" | "&" | "=" | "+" )
+        rule reg_name
+          (unreserved / escaped / [$,;:@&=+])+
+        end
+        
+        # authority     = server | reg_name
+        rule authority
+          server / reg_name
+        end
+        
+        # rel_segment   = 1*( unreserved | escaped |
+        #                     ";" | "@" | "&" | "=" | "+" | "$" | "," )
+        rule rel_segment
+          (unreserved / escaped / [;@&=+$,])+
+        end
+        
+        # scheme        = alpha *( alpha | digit | "+" | "-" | "." )
+        rule scheme
+          [a-zA-Z] ([-+.a-zA-Z\d])*
+        end
+        
+        # abs_path      = "/"  path_segments
+        rule abs_path
+          "/" path_segments
+        end
+        
+        # rel_path      = rel_segment [ abs_path ]
+        rule rel_path
+          rel_segment abs_path?
+        end
+        
+        # net_path      = "//" authority [ abs_path ]
+        rule net_path
+          "//" authority abs_path?
+        end
+        
+        # hier_part     = ( net_path | abs_path ) [ "?" query ]
+        rule hier_part
+          (net_path / abs_path) ("?" query)?
+        end
+        
+        # opaque_part   = uric_no_slash *uric
+        rule opaque_part
+          uric_no_slash uric*
+        end
+        
+        
+        # RFC 2373, APPENDIX B:
+        # IPv6address = hexpart [ ":" IPv4address ]
+        # IPv4address   = 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT
+        # hexpart = hexseq | hexseq "::" [ hexseq ] | "::" [ hexseq ]
+        # hexseq  = hex4 *( ":" hex4)
+        # hex4    = 1*4HEXDIG
+        #
+        # XXX: This definition has a flaw. "::" + IPv4address must be
+        # allowed too.  Here is a replacement.
+        #
+        # IPv4address = 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT
+        rule ipv4addr
+          [\d] [\d]? [\d]? "."
+          [\d] [\d]? [\d]? "."
+          [\d] [\d]? [\d]? "."
+          [\d] [\d]? [\d]?
+        end
+        
+        # hex4     = 1*4HEXDIG
+        rule hex4
+          hex hex? hex? hex?
+        end
+        
+        # lastpart = hex4 | IPv4address
+        rule lastpart
+          ipv4addr / hex4
+        end
+        
+        # hexseq1  = *( hex4 ":" ) hex4
+        rule hexseq1
+          (hex4 ":" &hex4)* hex4
+        end
+        
+        # hexseq2  = *( hex4 ":" ) lastpart
+        rule hexseq2 
+          (hex4 ":" &lastpart)* lastpart
+        end
+        
+        # IPv6address = hexseq2 | [ hexseq1 ] "::" [ hexseq2 ]
+        rule ipv6addr 
+          hexseq1? "::" hexseq2? / hexseq2
+          #fixing syntax highlighting:/
+        end
+        
+        # IPv6prefix  = ( hexseq1 | [ hexseq1 ] "::" [ hexseq1 ] ) "/" 1*2DIGIT
+        # unused
+        
+        # ipv6reference = "[" IPv6address "]" (RFC 2732)
+        rule ipv6ref
+          "[" ipv6addr "]"
+        end
+        
+        # domainlabel   = alphanum | alphanum *( alphanum | "-" ) alphanum
+        rule domainlabel
+          [a-zA-Z\d] (([-a-zA-Z\d] &[a-zA-Z\d])* [a-zA-Z\d])?
+        end
+        
+        # toplabel      = alpha | alpha *( alphanum | "-" ) alphanum
+        rule toplabel
+          [a-zA-Z] (([-a-zA-Z\d] &[a-zA-Z\d])* [a-zA-Z\d])?
+        end
+        
+        # hostname      = *( domainlabel "." ) toplabel [ "." ]
+        rule hostname
+          (domainlabel ".")* toplabel "."?
+        end
+        
+        # host          = hostname | IPv4address
+        # host          = hostname | IPv4address | IPv6reference (RFC 2732)
+        rule host
+          hostname / ipv4addr / ipv6ref
+        end
+        
+        # port          = *digit
+        rule port
+          [\d]*
+        end
+        
+        # hostport      = host [ ":" port ]
+        rule hostport 
+          host (":" port)?
+        end
+        
+        # userinfo      = *( unreserved | escaped |
+        #                    ";" | ":" | "&" | "=" | "+" | "$" | "," )
+        rule userinfo
+          (unreserved / escaped / [;:&=+$,])*
+        end
+        
+        # fragment      = *uric
+        rule fragment
+          uric*
+        end
+        
+        # query         = *uric
+        rule query
+          uric*
+        end
+        
+        # uric_no_slash = unreserved | escaped | ";" | "?" | ":" | "@" |
+        #                 "&" | "=" | "+" | "$" | ","
+        rule uric_no_slash
+          unreserved / escaped / [;?:@&=+$,]
+        end
+        
+        # uric          = reserved | unreserved | escaped
+        rule uric
+          reserved / unreserved / escaped
+        end
+        
+        # reserved      = ";" | "/" | "?" | ":" | "@" | "&" | "=" | "+" |
+        #                 "$" | ","
+        # reserved      = ";" | "/" | "?" | ":" | "@" | "&" | "=" | "+" | 
+        #                 "$" | "," | "[" | "]" (RFC 2732)
+        rule reserved
+          [;/?:@&=+,\[\]]
+        end
+        
+        # mark          = "-" | "_" | "." | "!" | "~" | "*" | "'" |
+        #                 "(" | ")"
+        # unreserved    = alphanum | mark
+        rule unreserved
+          [-_.!~*''()a-zA-Z\d]
+        end
+        
+        # escaped       = "%" hex hex
+        rule escaped
+          "%" hex hex
+        end
+        
+        # hex           = digit | "A" | "B" | "C" | "D" | "E" | "F" |
+        #                         "a" | "b" | "c" | "d" | "e" | "f"
+        rule hex
+          [a-fA-F\d]
+        end
+        
+      end
+    end
+  end
+end
