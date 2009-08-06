@@ -1,12 +1,12 @@
 require File.dirname(__FILE__) + "/../../../spec_helper"
-require 'redcloth/parser/attributes/sentence_uri'
+require 'redcloth/parser/attributes/nongreedy_uri'
 
 module RedCloth
   module Parser
     module Attributes
-      describe SentenceUri do
+      describe NongreedyUri do
         before :each do
-          @parser = SentenceUriParser.new
+          @parser = NongreedyUriParser.new
         end
   
         def parse(string)

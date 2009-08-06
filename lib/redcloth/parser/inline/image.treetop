@@ -1,13 +1,15 @@
 require File.dirname(__FILE__) + "/../attributes"
+require File.dirname(__FILE__) + "/../attributes/nongreedy_uri"
 
 module RedCloth
   module Parser
     module Inline
       grammar Image
         include Attributes
+        include Attributes::NongreedyUri
         
         rule image
-          "!" src:(![!(\s] .)+ alt_text:title? "!" link:image_link_suffix? {
+          "!" src:nongreedy_uri alt_text:title? "!" link:image_link_suffix? {
             def build(filter)
               attributes = {:src => src.text_value, :type => :image}
               attributes[:alt] = alt_text.text unless alt_text.empty?
@@ -22,9 +24,9 @@ module RedCloth
         end
         
         rule image_link_suffix
-          ":" url:(![\s] .)+ {
+          ":" nongreedy_uri {
             def href
-              url.text_value
+              uri.text_value
             end
           }
         end

@@ -3,10 +3,10 @@ require File.dirname(__FILE__) + "/uri"
 module RedCloth
   module Parser
     module Attributes
-      grammar SentenceUri
+      grammar NongreedyUri
         include Uri
         
-        rule sentence_uri
+        rule nongreedy_uri
           uri
         end
         
@@ -15,7 +15,7 @@ module RedCloth
         end
         
         rule rel_segment
-          (!(terminal_punctuation !(pchar / [#/;])) unreserved / escaped / [;@&=+$,])+
+          (!terminal_punctuation unreserved / escaped / [;@&=+$,])+
         end
         
         rule reg_name
@@ -31,11 +31,11 @@ module RedCloth
         end
         
         rule terminal_punctuation
-          punctuation_that_should_not_be_included_when_at_end_of_url !(pchar / [#/])
+          greedy_punctuation !(pchar / [#/;])
         end
         
         # In the context of inline Textile, these may not terminate a URI
-        rule punctuation_that_should_not_be_included_when_at_end_of_url
+        rule greedy_punctuation
           [!.]
         end
         

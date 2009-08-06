@@ -44,7 +44,14 @@ module RedCloth
         it "should parse an image with a link" do
           parse("!image.jpg!:link").to_sexp.should ==
             [:link, {:href => "link"}, [[:image, {:src => "image.jpg"}, []]]]
-          
+        end
+        
+        it "should not parse an invalid image URI" do
+          lambda{ parse("!http://a_b!") }.should raise_error
+        end
+        
+        it "should not parse an invalid image link URI" do
+          lambda{ parse("!image.jpg!:http://a_b") }.should raise_error
         end
         
       end
