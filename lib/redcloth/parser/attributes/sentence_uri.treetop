@@ -1,0 +1,45 @@
+require File.dirname(__FILE__) + "/uri"
+
+module RedCloth
+  module Parser
+    module Attributes
+      grammar SentenceUri
+        include Uri
+        
+        rule sentence_uri
+          uri
+        end
+        
+        rule segment
+          (!terminal_punctuation pchar)* (";" param)*
+        end
+        
+        rule rel_segment
+          (!(terminal_punctuation !(pchar / [#/;])) unreserved / escaped / [;@&=+$,])+
+        end
+        
+        rule reg_name
+          (!terminal_punctuation unreserved / escaped / [$,;:@&=+])+
+        end
+        
+        rule fragment
+          (!terminal_punctuation uric)*
+        end
+        
+        rule query
+          (!terminal_punctuation uric)*
+        end
+        
+        rule terminal_punctuation
+          punctuation_that_should_not_be_included_when_at_end_of_url !(pchar / [#/])
+        end
+        
+        # In the context of inline Textile, these may not terminate a URI
+        rule punctuation_that_should_not_be_included_when_at_end_of_url
+          [!.]
+        end
+        
+      end
+    end
+  end
+end

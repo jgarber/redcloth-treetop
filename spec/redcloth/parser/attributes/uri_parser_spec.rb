@@ -16,6 +16,10 @@ module RedCloth
         it "should parse a simple URI" do
           parse("foo").should_not be_nil
         end
+    
+        it "should parse a simple absolute URI" do
+          parse("http://www.google.com").should_not be_nil
+        end
         
         schemes =  %w(ftp http https gopher mailto news nntp telnet wais file prospero)
 
@@ -85,8 +89,12 @@ module RedCloth
           parse("URI#Examples_of_URI_references").should_not be_nil
         end
         
-        it "should parse a lone hash" do
+        it "should parse an empty fragment" do
           parse("#").should_not be_nil
+        end
+        
+        it "should parse a relative file" do
+          parse("image.jpg").should_not be_nil
         end
         
         it "should parse a URI containing escapes" do
