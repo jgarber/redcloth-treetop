@@ -30,8 +30,9 @@ module RedCloth
           (!terminal_punctuation uric)*
         end
         
+        # Greedy punctuation is okay inside a URI, but not at the end
         rule terminal_punctuation
-          greedy_punctuation !(pchar / [#/;])
+          greedy_punctuation (":" / !(pchar / [#/;]))
         end
         
         # In the context of inline Textile, these may not terminate a URI

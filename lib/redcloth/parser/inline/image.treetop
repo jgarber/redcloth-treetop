@@ -26,7 +26,7 @@ module RedCloth
         rule image_link_suffix
           ":" nongreedy_uri {
             def href
-              uri.text_value
+              nongreedy_uri.text_value
             end
           }
         end
