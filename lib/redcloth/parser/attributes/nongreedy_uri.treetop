@@ -11,23 +11,28 @@ module RedCloth
         end
         
         rule segment
-          (!terminal_punctuation pchar)* (";" param)*
+          (!unsafe pchar)* (";" param)*
         end
         
         rule rel_segment
-          (!terminal_punctuation unreserved / escaped / [;@&=+$,])+
+          (!unsafe unreserved / escaped / [;@&=+$,])+
         end
         
         rule reg_name
-          (!terminal_punctuation unreserved / escaped / [$,;:@&=+])+
+          (!unsafe unreserved / escaped / [$,;:@&=+])+
         end
         
         rule fragment
-          (!terminal_punctuation uric)*
+          (!unsafe uric)*
         end
         
         rule query
-          (!terminal_punctuation uric)*
+          (!unsafe uric)*
+        end
+        
+        # Don't allow these in a URI
+        rule unsafe
+          [()] / terminal_punctuation
         end
         
         # Greedy punctuation is okay inside a URI, but not at the end
