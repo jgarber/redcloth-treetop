@@ -33,8 +33,12 @@ module RedCloth
             [:image, {:src => "http://example.com/i/image.jpg#a1"}, []]
         end
         
-        it "should not parse a non-image with bang inside" do
+        it "should not parse a non-image triple-exclamation-mark" do
           lambda{ parse("!!!") }.should raise_error
+        end
+        
+        it "should not parse a non-image quadruple-exclamation-mark" do
+          lambda{ parse("!!!!") }.should raise_error
         end
         
         it "should not parse a non-image with space inside" do

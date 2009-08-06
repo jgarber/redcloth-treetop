@@ -9,7 +9,7 @@ module RedCloth
         include Attributes::NongreedyUri
         
         rule image
-          "!" src:nongreedy_uri alt_text:title? "!" link:image_link_suffix? {
+          "!" !non_image_excitement src:nongreedy_uri alt_text:title? "!" link:image_link_suffix? {
             def build(filter)
               attributes = {:src => src.text_value, :type => :image}
               attributes[:alt] = alt_text.text unless alt_text.empty?
@@ -29,6 +29,10 @@ module RedCloth
               nongreedy_uri.text_value
             end
           }
+        end
+        
+        rule non_image_excitement
+          "!"+
         end
         
       end
