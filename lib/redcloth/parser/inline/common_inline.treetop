@@ -37,7 +37,7 @@ module RedCloth
       
       rule word
         (
-          ( !(end_bold / end_strong / end_italics / end_em) mchar )+ /
+          ( !(end_bold / end_strong / end_italics / end_em / end_link) mchar )+ /
           '**' /
           '*' /
           '__' /
@@ -83,6 +83,10 @@ module RedCloth
       
       rule end_italics
         '__' !(![^a-zA-Z0-9_] .)
+      end
+      
+      rule end_link
+        '":'
       end
       
     end

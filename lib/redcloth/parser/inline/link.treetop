@@ -1,0 +1,26 @@
+require File.dirname(__FILE__) + "/common_inline"
+require File.dirname(__FILE__) + "/../attributes"
+require File.dirname(__FILE__) + "/../attributes/nongreedy_uri"
+
+module RedCloth
+  module Parser
+    module Inline
+      grammar Link
+        include CommonInline
+        include Attributes
+        include Attributes::NongreedyUri
+        
+        rule image
+          '"' contents:inline '":' href:nongreedy_uri {
+            def build(filter)
+              attributes = {:href => href.text_value, :type => :link}
+              # attributes = link_attributes.empty? ? {} : link_attributes.to_opts
+              Ast::Element.new(attributes, contents.build(filter))
+            end
+          }
+        end
+        
+      end
+    end
+  end
+end
