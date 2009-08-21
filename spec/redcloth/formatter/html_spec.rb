@@ -36,6 +36,15 @@ module RedCloth
         end
       end
       
+      describe "#list" do
+        it "should format a simple list" do
+          @list = Ast::List.new({}, [
+            Ast::ListItem.new({}, ["one"])
+          ])
+          @formatter.list(@list).should == "<ol><li>one</li></ol>"
+        end
+      end
+      
       describe "#strong" do
         it "should format a strong phrase" do
           @strong = Ast::Element.new({:type => 'strong'}, ['Strong phrase.'])

@@ -33,6 +33,18 @@ module RedCloth
         end
       end
       
+      def list(element)
+        builder.ol do
+          accept_contents(element)
+        end
+      end
+      
+      def list_item(element)
+        builder.li do
+          accept_contents(element)
+        end
+      end
+      
       def strong(element)
         builder.strong do
           accept_contents(element)
