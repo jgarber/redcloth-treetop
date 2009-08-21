@@ -45,6 +45,12 @@ module RedCloth
         end
       end
       
+      def em(element)
+        builder.em do
+          accept_contents(element)
+        end
+      end
+      
       private
       
       def accept_contents(element)

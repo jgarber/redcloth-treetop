@@ -50,6 +50,13 @@ module RedCloth
         end
       end
       
+      describe "#em" do
+        it "should format an emphasized phrase" do
+          @em = Ast::Element.new({:type => 'em'}, ['Emphasized phrase.'])
+          @formatter.em(@em).should == "<em>Emphasized phrase.</em>"
+        end
+      end
+      
     end
   end
 end
