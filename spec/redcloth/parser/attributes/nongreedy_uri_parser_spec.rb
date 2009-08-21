@@ -29,7 +29,6 @@ module RedCloth
           end
                     
           %w(. !).each do |punct|
-            
             it "should allow a '#{punct}' within the path without a slash" do
               parse("http://redcloth.org/text#{punct}ile").text_value.should == "http://redcloth.org/text#{punct}ile"
             end
@@ -73,7 +72,9 @@ module RedCloth
             it "should allow a '#{punct}' within the query" do
               parse("index?foo=bar#{punct}baz").text_value.should == "index?foo=bar#{punct}baz"
             end
-            
+          end
+          
+          [".", "!", ")"].each do |punct|
             it "should not include a '#{punct}' terminating the TLD" do
               parse("http://redcloth.org#{punct}").text_value.should == "http://redcloth.org"
             end
@@ -123,6 +124,53 @@ module RedCloth
             end
             
           end
+        end
+        
+        describe "matched parentheses" do
+          it "should allow matched parentheses within the path without a slash" do
+            parse("http://redcloth.org/text(ile)").text_value.should == "http://redcloth.org/text(ile)"
+          end
+          
+          it "should allow matched parentheses within the filename" do
+            parse("http://redcloth.org/text(ile).html").text_value.should == "http://redcloth.org/text(ile).html"
+          end
+          
+          it "should allow matched parentheses within the path with a slash" do
+            parse("http://redcloth.org/text(ile)/").text_value.should == "http://redcloth.org/text(ile)/"
+          end
+          
+          it "should allow matched parentheses before the fragment hash" do
+            parse("http://redcloth.org/text(ile)#").text_value.should == "http://redcloth.org/text(ile)#"
+          end
+          
+          it "should allow matched parentheses within the fragment" do
+            parse("http://redcloth.org/#foo(bar)").text_value.should == "http://redcloth.org/#foo(bar)"
+          end
+          
+          it "should allow matched parentheses within the absolute path" do
+            parse("/foo(bar)").text_value.should == "/foo(bar)"
+          end
+          
+          it "should allow matched parentheses before the absolute path final slash" do
+            parse("/foo(bar)/").text_value.should == "/foo(bar)/"
+          end
+          
+          it "should allow matched parentheses within the relative path" do
+            parse("foo(bar)").text_value.should == "foo(bar)"
+          end
+          
+          it "should allow matched parentheses before the param" do
+            parse("foo(t);bar").text_value.should == "foo(t);bar"
+          end
+          
+          it "should allow matched parentheses within the param" do
+            parse("foo;bar(none)baz").text_value.should == "foo;bar(none)baz"
+          end
+          
+          it "should allow matched parentheses within the query" do
+            parse("index?foo=bar(none)baz").text_value.should == "index?foo=bar(none)baz"
+          end
+          
         end
         
       end
