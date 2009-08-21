@@ -2,6 +2,7 @@ module RedCloth
   module Ast
     class ListItem
       attr_reader :contained_elements
+      attr_reader :opts
       
       def initialize(opts, contained_elements)
         @opts, @contained_elements = opts, contained_elements

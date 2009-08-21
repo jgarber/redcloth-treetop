@@ -34,13 +34,13 @@ module RedCloth
       end
       
       def list(element)
-        builder.ol do
+        builder.ol(element.opts) do
           accept_contents(element)
         end
       end
       
       def list_item(element)
-        builder.li do
+        builder.li(element.opts) do
           accept_contents(element)
         end
       end

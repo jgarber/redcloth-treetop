@@ -43,6 +43,20 @@ module RedCloth
           ])
           @formatter.list(@list).should == "<ol><li>one</li></ol>"
         end
+        
+        it "should format class on a list" do
+          @list = Ast::List.new({:class => "myclass"}, [
+            Ast::ListItem.new({}, ["one"])
+          ])
+          @formatter.list(@list).should == %Q{<ol class="myclass"><li>one</li></ol>}
+        end
+        
+        it "should format class on a list item" do
+          @list = Ast::List.new({}, [
+            Ast::ListItem.new({:class => "myclass"}, ["one"])
+          ])
+          @formatter.list(@list).should == %Q{<ol><li class="myclass">one</li></ol>}
+        end
       end
       
       describe "#strong" do

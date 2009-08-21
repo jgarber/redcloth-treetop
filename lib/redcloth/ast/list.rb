@@ -1,6 +1,8 @@
 module RedCloth
   module Ast
     class List
+      attr_reader :opts
+
       def initialize(opts, list_items)
         @opts, @list_items = opts, list_items
       end

@@ -3,6 +3,7 @@ module RedCloth
     class Element
       attr_reader :contained_elements
       attr_reader :type
+      attr_reader :opts
       
       def initialize(opts={}, contained_elements=[])
         @opts = opts
