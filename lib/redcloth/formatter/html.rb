@@ -62,6 +62,12 @@ module RedCloth
           accept_contents(element)
         end
       end
+
+      def double_quote(element)
+        builder << "&#8220;"
+        accept_contents(element)
+        builder << "&#8221;"
+      end
       
       private
       

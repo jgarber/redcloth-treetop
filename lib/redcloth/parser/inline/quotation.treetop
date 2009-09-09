@@ -1,0 +1,28 @@
+require File.dirname(__FILE__) + "/common_inline"
+
+module RedCloth
+  module Parser
+    module Inline
+      grammar Quotation
+        include CommonInline
+        
+        rule quotation
+          double_quote
+        end
+        
+        rule double_quote
+          '"' double_quote_attributes:attributes? contents:inline end_double_quote {
+            def build(filter)
+              attributes = double_quote_attributes.empty? ? {} : double_quote_attributes.to_opts
+              Ast::Element.new(
+                attributes.merge(:type => :double_quote),
+                contents.build(filter)
+              )
+            end
+          }
+        end
+        
+      end
+    end
+  end
+end

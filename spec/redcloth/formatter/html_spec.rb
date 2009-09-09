@@ -80,6 +80,13 @@ module RedCloth
         end
       end
       
+      describe "#double_quote" do
+        it "should format an double quotation" do
+          @double_quote = Ast::Element.new({:type => 'double_quote'}, ['Profound quote.'])
+          @formatter.double_quote(@double_quote).should == "&#8220;Profound quote.&#8221;"
+        end
+      end
+      
     end
   end
 end

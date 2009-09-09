@@ -153,6 +153,12 @@ module RedCloth
             " see"]]]
       end
       
+      ### double quotation ###
+      
+      it "should parse a quotation" do
+        parsed_sexp(%{"I think, therefore, I am"}).should ==
+          [[:double_quote, {}, ["I think, therefore, I am"]]]
+      end
       
     end
   end

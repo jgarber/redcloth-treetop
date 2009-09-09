@@ -4,6 +4,7 @@ require File.dirname(__FILE__) + "/inline/strong"
 require File.dirname(__FILE__) + "/inline/bold"
 require File.dirname(__FILE__) + "/inline/em"
 require File.dirname(__FILE__) + "/inline/italic"
+require File.dirname(__FILE__) + "/inline/quotation"
 
 module RedCloth
   module Parser
@@ -14,6 +15,7 @@ module RedCloth
       include Bold
       include Em
       include Italic
+      include Quotation
       
       rule inline
         super
@@ -24,6 +26,7 @@ module RedCloth
         strong /
         italic /
         em /
+        quotation /
         word
       end
       
